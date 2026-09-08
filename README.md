@@ -9,7 +9,7 @@ Built for students with learning disabilities. That drives everything: plain lan
 one idea per click, the same layout on every lesson, calm high-contrast visuals, and
 nothing that ever advances on its own.
 
-**Live site:** https://<your-username>.github.io/alc-math-binder/
+**Live site:** https://benfminer.github.io/alc-math-binder/
 
 ---
 
