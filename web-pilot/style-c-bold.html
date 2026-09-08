@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ALC Math Help — Order of Operations</title>
+<style>
+  :root{
+    --ink:#000000;
+    --paper:#ffffff;
+    --band:#101418;
+    --line:#101418;
+    --blue:#00458f;
+    --blue-soft:#e2ecf8;
+    --gold:#8a5c00;
+    --gold-soft:#fff2d1;
+    --good:#0b5c2e;
+    --good-soft:#dcf2e4;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:20px;line-height:1.6;font-weight:450;
+  }
+  .wrap{max-width:44rem;margin:0 auto;padding:0 1.25rem 5rem}
+  .skip{position:absolute;left:-9999px;background:var(--ink);color:#fff;padding:.8rem 1.1rem;z-index:99;font-weight:700}
+  .skip:focus{left:0}
+  :focus-visible{outline:4px solid var(--blue);outline-offset:3px}
+
+  header.site{background:var(--band);color:#fff;border-bottom:6px solid var(--gold)}
+  header.site .wrap{padding:1.5rem 1.25rem}
+  .brand{margin:0;font-size:1.35rem;font-weight:900;letter-spacing:.02em;text-transform:uppercase}
+  .tagline{margin:.15rem 0 0;font-size:1.05rem;font-weight:500}
+
+  h1{font-size:2.4rem;line-height:1.15;margin:2.25rem 0 .6rem;font-weight:900;letter-spacing:-.02em}
+  h2{font-size:1.5rem;margin:0 0 .85rem;font-weight:800}
+  h3{font-size:1.15rem;margin:0 0 .45rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+  p{margin:0 0 1rem;max-width:60ch}
+  .lede{font-size:1.2rem;max-width:58ch;margin-bottom:2rem;font-weight:500}
+
+  .card{background:#fff;border:3px solid var(--line);padding:1.6rem;margin:0 0 1.5rem}
+  .card > :last-child{margin-bottom:0}
+  .card.blue{background:var(--blue-soft);border-color:var(--blue)}
+  .card.gold{background:var(--gold-soft);border-color:var(--gold)}
+  .card.gold h3{color:var(--gold)}
+
+  ul.topics{list-style:none;margin:0;padding:0;display:grid;gap:.6rem}
+  ul.topics button{
+    width:100%;text-align:left;background:#fff;border:3px solid var(--line);padding:1.1rem 1.25rem;
+    font:inherit;font-weight:800;color:var(--ink);cursor:pointer;min-height:48px;
+    display:flex;justify-content:space-between;align-items:center;gap:1rem;
+  }
+  ul.topics button:hover{background:var(--ink);color:#fff}
+  ul.topics button:hover .tag{background:#fff;color:var(--ink)}
+  ul.topics li.soon{border:3px solid #c9cdd2;color:#4a5158;padding:1.1rem 1.25rem;font-weight:500;
+    display:flex;justify-content:space-between;align-items:center;gap:1rem}
+  .num{font-variant-numeric:tabular-nums;margin-right:.4rem}
+  .tag{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;
+       background:var(--ink);color:#fff;padding:.25rem .6rem;flex:none}
+  li.soon .tag{background:transparent;color:#4a5158;border:2px solid #c9cdd2}
+
+  .btn{font:inherit;font-weight:800;background:var(--ink);color:#fff;border:3px solid var(--ink);
+       padding:.7rem 1.2rem;cursor:pointer;min-height:48px}
+  .btn:hover{background:var(--blue);border-color:var(--blue)}
+  .btn.ghost{background:#fff;color:var(--ink)}
+  .btn.ghost:hover{background:var(--ink);color:#fff}
+  .btn[disabled]{opacity:.4;cursor:default}
+  .btn.small{font-size:.95rem;padding:.5rem 1rem;min-height:44px}
+  .row{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center}
+
+  .math{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:1.5rem;font-weight:700;
+        border:3px solid var(--line);padding:.75rem 1rem;display:inline-block;background:#fff;margin:.35rem 0}
+  .math .hl{background:var(--gold-soft);outline:3px solid var(--gold);outline-offset:1px;padding:0 .1rem}
+
+  table.pem{border-collapse:collapse;width:100%;margin:.25rem 0 0}
+  table.pem th,table.pem td{border:3px solid var(--line);padding:.85rem .9rem;text-align:left;vertical-align:top}
+  table.pem th{background:var(--ink);color:#fff;font-weight:800;font-size:.9rem;text-transform:uppercase;letter-spacing:.05em}
+  table.pem td.sym{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:1.35rem;font-weight:800;width:5.5rem;text-align:center}
+  .scroller{overflow-x:auto}
+
+  ol.steps{margin:0;padding:0;list-style:none;counter-reset:s}
+  ol.steps li{counter-increment:s;position:relative;padding:1.1rem 0 1.1rem 3.6rem}
+  ol.steps li + li{border-top:3px solid var(--line)}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:1.1rem;width:2.6rem;height:2.6rem;
+    background:var(--ink);color:#fff;font-weight:900;display:grid;place-items:center;font-size:1.15rem}
+  ol.steps li:first-child{padding-top:.2rem}
+  ol.steps li:first-child::before{top:.2rem}
+  ol.steps li p{margin:0}
+  ol.steps li p + p{margin-top:.55rem}
+  .hidden{display:none}
+
+  .q + .q{border-top:3px solid var(--line);margin-top:1.5rem;padding-top:1.5rem}
+  .q input{font:inherit;font-size:1.2rem;font-weight:700;padding:.65rem .8rem;border:3px solid var(--line);
+    width:10rem;min-height:48px;background:#fff;color:var(--ink)}
+  .q input:focus-visible{border-color:var(--blue)}
+  .fb{margin-top:.9rem;padding:.9rem 1.1rem;font-weight:700;border-left:8px solid}
+  .fb.ok{background:var(--good-soft);color:var(--good);border-color:var(--good)}
+  .fb.no{background:var(--gold-soft);color:var(--gold);border-color:var(--gold)}
+
+  .speak{font:inherit;font-size:.9rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;
+    background:#fff;border:3px solid var(--line);padding:.35rem .85rem;cursor:pointer;color:var(--ink);min-height:40px}
+  .speak:hover,.speak[aria-pressed="true"]{background:var(--ink);color:#fff}
+  .cardhead{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}
+
+  footer{border-top:6px solid var(--ink);margin-top:3rem;padding-top:1.25rem;font-size:.95rem;font-weight:600}
+  .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+  @media (max-width:480px){h1{font-size:1.9rem}.card{padding:1.15rem}.math{font-size:1.2rem}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="site">
+  <div class="wrap">
+    <p class="brand">ALC Math Help</p>
+    <p class="tagline">Look up any skill. Any time.</p>
+  </div>
+</header>
+
+<main id="main" class="wrap" tabindex="-1">
+
+  <section id="home">
+    <h1>What do you need help with?</h1>
+    <p class="lede">Choose a skill. You will get plain steps, one at a time, plus problems to try.</p>
+    <ul class="topics">
+      <li class="soon"><span><span class="num">1.</span> Place Value</span> <span class="tag">Soon</span></li>
+      <li class="soon"><span><span class="num">2.</span> Adding and Subtracting</span> <span class="tag">Soon</span></li>
+      <li class="soon"><span><span class="num">3.</span> Multiplication</span> <span class="tag">Soon</span></li>
+      <li class="soon"><span><span class="num">4.</span> Division</span> <span class="tag">Soon</span></li>
+      <li class="soon"><span><span class="num">5.</span> Fractions</span> <span class="tag">Soon</span></li>
+      <li class="soon"><span><span class="num">6.</span> Decimals</span> <span class="tag">Soon</span></li>
+      <li class="soon"><span><span class="num">7.</span> Exponents</span> <span class="tag">Soon</span></li>
+      <li><button type="button" onclick="go()"><span><span class="num">8.</span> Order of Operations</span> <span class="tag">Ready</span></button></li>
+    </ul>
+  </section>
+
+  <section id="lesson" class="hidden">
+    <p style="margin:1.75rem 0 0"><button class="btn ghost small" type="button" onclick="home()">&larr; All skills</button></p>
+    <h1>Order of Operations</h1>
+    <p class="lede">When a problem has more than one operation, you cannot just work left to right. There is an order you must follow.</p>
+
+    <div class="card blue">
+      <div class="cardhead">
+        <h2>Why the order matters</h2>
+        <button class="speak" type="button" aria-pressed="false" data-read="why">Read aloud</button>
+      </div>
+      <div id="why">
+        <p>Look at <strong>5 + 3 &times; 2</strong>.</p>
+        <p>If you go left to right you get 16. That answer is wrong.</p>
+        <p>Multiply first, then add, and you get <strong>11</strong>. That is the right answer. Everyone has to use the same order or we would all get different answers.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardhead">
+        <h2>The order</h2>
+        <button class="speak" type="button" aria-pressed="false" data-read="order">Read aloud</button>
+      </div>
+      <div class="scroller" id="order">
+        <table class="pem">
+          <caption class="visually-hidden">The four stages of the order of operations, in order.</caption>
+          <thead><tr><th scope="col">Do this</th><th scope="col">Sign</th><th scope="col">What it means</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">1st</th><td class="sym">( )</td><td>Anything inside parentheses. Finish it completely first.</td></tr>
+            <tr><th scope="row">2nd</th><td class="sym">4&sup3;</td><td>Exponents. A small raised number means multiply the base by itself that many times.</td></tr>
+            <tr><th scope="row">3rd</th><td class="sym">&times; &divide;</td><td>Multiply and divide. Work <strong>left to right</strong>, whichever one you meet first.</td></tr>
+            <tr><th scope="row">4th</th><td class="sym">+ &minus;</td><td>Add and subtract. Work <strong>left to right</strong>, whichever one you meet first.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card gold">
+      <h3>The most common mistake</h3>
+      <p style="margin:0">Multiply and divide are <strong>equal partners</strong>. So are add and subtract. You do not do all the multiplying first. You take them left to right, whichever comes first. In <strong>36 &divide; 6 &times; 2</strong> you divide first, because the divide sign comes first.</p>
+    </div>
+
+    <div class="card">
+      <div class="cardhead">
+        <h2>Worked example</h2>
+        <button class="speak" type="button" aria-pressed="false" data-read="steps">Read aloud</button>
+      </div>
+      <p>Solve: <span class="math" style="font-size:1.2rem;padding:.35rem .6rem">4&sup3; &minus; 36 &divide; 6 + 2 (9 + 12)</span></p>
+      <ol class="steps" id="steps">
+        <li data-step="1"><p>Parentheses first. <strong>9 + 12 = 21</strong></p>
+          <p class="math">4&sup3; &minus; 36 &divide; 6 + 2 &times; <span class="hl">21</span></p></li>
+        <li data-step="2" class="hidden"><p>Now the exponent. <strong>4&sup3; means 4 &times; 4 &times; 4 = 64</strong></p>
+          <p class="math"><span class="hl">64</span> &minus; 36 &divide; 6 + 2 &times; 21</p></li>
+        <li data-step="3" class="hidden"><p>Multiply and divide, left to right. The divide sign comes first. <strong>36 &divide; 6 = 6</strong></p>
+          <p class="math">64 &minus; <span class="hl">6</span> + 2 &times; 21</p></li>
+        <li data-step="4" class="hidden"><p>Keep going left to right. <strong>2 &times; 21 = 42</strong></p>
+          <p class="math">64 &minus; 6 + <span class="hl">42</span></p></li>
+        <li data-step="5" class="hidden"><p>Add and subtract, left to right. The minus sign comes first. <strong>64 &minus; 6 = 58</strong></p>
+          <p class="math"><span class="hl">58</span> + 42</p></li>
+        <li data-step="6" class="hidden"><p>Last step. <strong>58 + 42 = 100</strong></p>
+          <p class="math"><span class="hl">100</span></p></li>
+      </ol>
+      <div class="row" style="margin-top:1.25rem">
+        <button class="btn" type="button" id="next">Show next step</button>
+        <button class="btn ghost" type="button" id="reset">Start over</button>
+      </div>
+      <p aria-live="polite" class="visually-hidden" id="live">Step 1 of 6 showing.</p>
+    </div>
+
+    <div class="card">
+      <div class="cardhead">
+        <h2>Try it yourself</h2>
+        <button class="speak" type="button" aria-pressed="false" data-read="qs">Read aloud</button>
+      </div>
+      <p>Work out each one and type the final answer.</p>
+      <div id="qs"></div>
+    </div>
+
+    <p><button class="btn ghost" type="button" onclick="home()">&larr; Back to all skills</button></p>
+  </section>
+
+  <footer><p>ALC Resources &middot; Adult Learning Center math reference</p></footer>
+</main>
+
+<script>
+function go(){document.getElementById('home').classList.add('hidden');document.getElementById('lesson').classList.remove('hidden');window.scrollTo(0,0);}
+function home(){stopSpeech();document.getElementById('lesson').classList.add('hidden');document.getElementById('home').classList.remove('hidden');window.scrollTo(0,0);}
+
+var shown=1,total=6,stepsEl=document.getElementById('steps'),live=document.getElementById('live');
+document.getElementById('next').addEventListener('click',function(){
+  if(shown>=total)return;
+  shown++;
+  var li=stepsEl.querySelector('[data-step="'+shown+'"]');
+  li.classList.remove('hidden');
+  live.textContent='Step '+shown+' of '+total+'. '+li.textContent.replace(/\s+/g,' ').trim();
+  if(shown>=total){this.disabled=true;this.textContent='That is the last step';}
+});
+document.getElementById('reset').addEventListener('click',function(){
+  shown=1;
+  stepsEl.querySelectorAll('[data-step]').forEach(function(li){if(li.getAttribute('data-step')!=='1')li.classList.add('hidden');});
+  var n=document.getElementById('next');n.disabled=false;n.textContent='Show next step';
+  live.textContent='Back to step 1 of '+total+'.';
+});
+
+var questions=[
+ {q:'5 + 3 &times; 2', plain:'5 plus 3 times 2', ok:['11'],
+  hint:'Not yet. Multiply before you add. Do 3 times 2 first, then add the 5.'},
+ {q:'20 &minus; 12 &divide; 4', plain:'20 minus 12 divided by 4', ok:['17'],
+  hint:'Try again. Divide before you subtract. Do 12 divided by 4 first, then take that away from 20.'},
+ {q:'(6 + 2) &times; 3&sup2;', plain:'Open parenthesis 6 plus 2 close parenthesis times 3 squared', ok:['72'],
+  hint:'Not quite. Parentheses first: 6 plus 2 is 8. Then the exponent: 3 squared is 9. Then multiply.'},
+ {q:'24 &divide; 6 &times; 2', plain:'24 divided by 6 times 2', ok:['8'],
+  hint:'Careful, this is the tricky one. Go left to right. Divide 24 by 6 first, then multiply by 2. Do not do 6 times 2 first.'}
+];
+var box=document.getElementById('qs');
+questions.forEach(function(item,i){
+  var d=document.createElement('div');
+  d.className='q';
+  d.innerHTML='<h3>Question '+(i+1)+'</h3>'+
+    '<p class="math" style="font-size:1.3rem">'+item.q+'<span class="visually-hidden">. '+item.plain+'</span></p>'+
+    '<div class="row"><label class="visually-hidden" for="a'+i+'">Your answer for question '+(i+1)+'</label>'+
+    '<input id="a'+i+'" type="text" inputmode="numeric" autocomplete="off" aria-describedby="f'+i+'">'+
+    '<button class="btn small" type="button" data-i="'+i+'">Check</button></div>'+
+    '<p class="fb hidden" id="f'+i+'" role="status" aria-live="polite"></p>';
+  box.appendChild(d);
+});
+function norm(s){return String(s).toLowerCase().replace(/[\s,]/g,'');}
+box.addEventListener('click',function(e){
+  var b=e.target.closest('button[data-i]'); if(!b)return;
+  var i=+b.getAttribute('data-i'), val=norm(document.getElementById('a'+i).value), fb=document.getElementById('f'+i);
+  fb.classList.remove('hidden','ok','no');
+  if(!val){fb.classList.add('fb','no');fb.textContent='Type an answer first, then press Check.';return;}
+  var right=questions[i].ok.some(function(a){return norm(a)===val;});
+  fb.classList.add('fb',right?'ok':'no');
+  fb.textContent=right?'Correct. Nice work.':questions[i].hint;
+});
+
+function readableText(el){
+  var c=el.cloneNode(true);
+  c.querySelectorAll('.hidden').forEach(function(n){n.remove();});
+  return (c.textContent||'').replace(/\s+/g,' ').trim();
+}
+var _s=window.speechSynthesis;
+function stopSpeech(){
+  if(_s)_s.cancel();
+  document.querySelectorAll('.speak[aria-pressed="true"]').forEach(function(b){b.setAttribute('aria-pressed','false');b.textContent='Read aloud';});
+}
+document.querySelectorAll('.speak').forEach(function(btn){
+  if(!_s){btn.remove();return;}
+  btn.addEventListener('click',function(){
+    var wasOn=btn.getAttribute('aria-pressed')==='true';
+    stopSpeech(); if(wasOn)return;
+    var src=document.getElementById(btn.getAttribute('data-read')); if(!src)return;
+    var u=new SpeechSynthesisUtterance(readableText(src));
+    u.rate=.85;
+    u.onend=function(){btn.setAttribute('aria-pressed','false');btn.textContent='Read aloud';};
+    btn.setAttribute('aria-pressed','true');btn.textContent='Stop reading';
+    _s.speak(u);
+  });
+});
+</script>
+</body>
+</html>

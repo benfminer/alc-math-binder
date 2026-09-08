@@ -1,0 +1,8 @@
+# Source PDFs (Canva exports — kept local, not published)
+*.pdf
+
+# macOS
+.DS_Store
+
+# Editor / tooling
+.claude/

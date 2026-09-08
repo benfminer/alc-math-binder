@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ALC Math Binder</title>
+<script src="styles.js"></script>
+<script>document.head.appendChild(Object.assign(document.createElement("style"), { textContent: APP_CSS }));</script>
+</head>
+<body>
+
+<!-- ============ BINDER (home) ============ -->
+<main id="home" class="home">
+  <header class="home-head">
+    <h1>ALC Math Binder</h1>
+    <p class="tagline">Pick today's lesson.</p>
+  </header>
+  <div id="binder"></div>
+  <footer class="home-foot">TRACE Schools &middot; teacher-led lessons &middot; press a card to start</footer>
+</main>
+
+<!-- ============ LESSON PLAYER ============ -->
+<main id="player" class="player" hidden>
+  <div class="player-grid">
+    <section class="stage-wrap">
+      <div class="lesson-title-bar">
+        <button class="btn ghost" id="btnHome" title="Back to binder">&#8962; Binder</button>
+        <h2 id="lessonName"></h2>
+        <button class="btn ghost" id="btnPresenter" title="Open presenter window">&#128221; Presenter</button>
+      </div>
+      <div id="stage" class="stage" aria-live="polite"></div>
+    </section>
+
+    <aside class="steps-wrap">
+      <h3 class="steps-title">Steps</h3>
+      <ol id="stepsList" class="steps-list"></ol>
+    </aside>
+  </div>
+
+  <nav class="teacher-bar">
+    <button class="btn big" id="btnBack">&#9664; Back</button>
+    <div class="dots" id="dots"></div>
+    <button class="btn big primary" id="btnNext">Next &#9654;</button>
+  </nav>
+</main>
+
+<script src="lessons.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

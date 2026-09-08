@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ALC Math Help — Place Value</title>
+<style>
+  :root{
+    --ink:#1a1d21;
+    --ink-soft:#4a5158;
+    --paper:#fbfaf8;
+    --card:#ffffff;
+    --line:#dfdcd6;
+    --accent:#1f5f4f;
+    --accent-soft:#e8f1ee;
+    --focus:#0b4f8a;
+    --good:#15503f;
+    --good-bg:#e6f2ee;
+    --try:#7a4a00;
+    --try-bg:#fdf1de;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:19px;
+    line-height:1.65;
+  }
+  .wrap{max-width:44rem;margin:0 auto;padding:0 1.25rem 5rem}
+  .skip{position:absolute;left:-9999px;top:0;background:var(--accent);color:#fff;padding:.75rem 1rem;z-index:99;border-radius:0 0 6px 0}
+  .skip:focus{left:0}
+  :focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:4px}
+
+  header.site{border-bottom:1px solid var(--line);background:var(--card)}
+  header.site .wrap{padding-top:1.5rem;padding-bottom:1.5rem}
+  .brand{font-size:1rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin:0}
+  .tagline{margin:.35rem 0 0;color:var(--ink-soft);font-size:1.02rem}
+
+  h1{font-size:2.1rem;line-height:1.25;margin:2.5rem 0 .5rem;font-weight:650;letter-spacing:-.01em}
+  h2{font-size:1.4rem;line-height:1.35;margin:0 0 .85rem;font-weight:650}
+  h3{font-size:1.1rem;margin:0 0 .5rem;font-weight:650}
+  p{margin:0 0 1rem;max-width:62ch}
+  .lede{font-size:1.15rem;color:var(--ink-soft);max-width:60ch;margin-bottom:2rem}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1.75rem;margin:0 0 1.5rem}
+  .card > :last-child{margin-bottom:0}
+
+  ul.topics{list-style:none;margin:0;padding:0;display:grid;gap:.75rem}
+  ul.topics button{
+    width:100%;text-align:left;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:1.1rem 1.25rem;font:inherit;color:var(--ink);cursor:pointer;
+    display:flex;justify-content:space-between;align-items:center;gap:1rem;min-height:44px;
+  }
+  ul.topics button:hover{border-color:var(--accent);background:var(--accent-soft)}
+  ul.topics .num{color:var(--ink-soft);font-variant-numeric:tabular-nums;font-size:.95rem;flex:none}
+  ul.topics li.soon{
+    border:1px dashed var(--line);border-radius:10px;padding:1.1rem 1.25rem;color:var(--ink-soft);
+    display:flex;justify-content:space-between;align-items:center;gap:1rem;background:transparent;
+  }
+  .tag{font-size:.85rem;border:1px solid var(--line);border-radius:99px;padding:.15rem .6rem;flex:none;color:var(--ink-soft)}
+
+  .btn{
+    font:inherit;font-weight:600;background:var(--accent);color:#fff;border:2px solid var(--accent);
+    border-radius:8px;padding:.7rem 1.15rem;cursor:pointer;min-height:44px;
+  }
+  .btn:hover{background:#17493c;border-color:#17493c}
+  .btn.ghost{background:transparent;color:var(--accent)}
+  .btn.ghost:hover{background:var(--accent-soft)}
+  .btn[disabled]{opacity:.45;cursor:default}
+  .btn.small{font-size:.95rem;padding:.5rem .9rem}
+  .row{display:flex;flex-wrap:wrap;gap:.65rem;align-items:center}
+
+  .vocab{display:grid;gap:1rem;margin:0}
+  .vocab div{border-left:4px solid var(--accent);padding-left:1rem}
+  .vocab dt{font-weight:650;margin:0}
+  .vocab dd{margin:.15rem 0 0;color:var(--ink-soft)}
+
+  table.pv{border-collapse:collapse;width:100%;margin:.5rem 0 1rem;font-variant-numeric:tabular-nums}
+  table.pv caption{text-align:left;color:var(--ink-soft);font-size:.95rem;margin-bottom:.5rem}
+  table.pv th,table.pv td{border:1px solid var(--line);padding:.6rem .3rem;text-align:center}
+  table.pv th{font-size:.78rem;font-weight:650;line-height:1.25;background:var(--accent-soft);color:var(--accent)}
+  table.pv td{font-size:1.5rem;font-weight:600}
+  table.pv td.mark{background:#fff6d9;outline:2px solid #b8860b;outline-offset:-2px}
+  .scroller{overflow-x:auto}
+
+  ol.steps{margin:0;padding:0;list-style:none;counter-reset:s}
+  ol.steps li{
+    counter-increment:s;position:relative;padding:1rem 0 1rem 3.1rem;border-top:1px solid var(--line);
+  }
+  ol.steps li:first-child{border-top:0;padding-top:.25rem}
+  ol.steps li::before{
+    content:counter(s);position:absolute;left:0;top:1rem;width:2.1rem;height:2.1rem;border-radius:50%;
+    background:var(--accent-soft);color:var(--accent);font-weight:700;display:grid;place-items:center;font-size:1rem;
+  }
+  ol.steps li:first-child::before{top:.25rem}
+  ol.steps li p{margin:0}
+  ol.steps li .math{margin-top:.5rem}
+
+  .math{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:1.25rem;background:var(--accent-soft);
+    border-radius:8px;padding:.7rem 1rem;display:inline-block;color:var(--ink)}
+
+  .hidden{display:none}
+  .note{border-left:4px solid #b8860b;background:#fdf9ee;padding:1rem 1.25rem;border-radius:0 8px 8px 0}
+  .note h3{color:#7a5a00}
+
+  .q{border-top:1px solid var(--line);padding:1.5rem 0}
+  .q:first-of-type{border-top:0;padding-top:0}
+  .q input{
+    font:inherit;font-size:1.15rem;padding:.65rem .8rem;border:2px solid var(--line);border-radius:8px;
+    width:11rem;min-height:44px;background:#fff;color:var(--ink)
+  }
+  .q input:focus-visible{border-color:var(--focus)}
+  .fb{margin-top:.9rem;padding:.85rem 1rem;border-radius:8px;font-weight:500}
+  .fb.ok{background:var(--good-bg);color:var(--good);border-left:4px solid var(--good)}
+  .fb.no{background:var(--try-bg);color:var(--try);border-left:4px solid #b8860b}
+
+  .speak{font:inherit;font-size:.95rem;background:transparent;border:1px solid var(--line);border-radius:99px;
+    padding:.4rem .9rem;cursor:pointer;color:var(--ink-soft);min-height:36px}
+  .speak:hover{border-color:var(--accent);color:var(--accent)}
+  .speak[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .cardhead{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}
+
+  footer{border-top:1px solid var(--line);margin-top:3rem;padding-top:1.5rem;color:var(--ink-soft);font-size:.95rem}
+  @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+  @media (max-width:480px){body{font-size:18px} h1{font-size:1.7rem} .card{padding:1.25rem}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="site">
+  <div class="wrap">
+    <p class="brand">ALC Math Help</p>
+    <p class="tagline">Look up a skill any time you need a reminder.</p>
+  </div>
+</header>
+
+<main id="main" class="wrap" tabindex="-1">
+
+  <!-- ============ HOME ============ -->
+  <section id="home">
+    <h1>What do you need help with?</h1>
+    <p class="lede">Pick a skill from the list. Each one shows you the steps, one at a time, with an example you can follow.</p>
+    <ul class="topics">
+      <li><button type="button" onclick="go()"><span><span class="num">1.</span> Place Value</span> <span class="tag">Ready</span></button></li>
+      <li class="soon"><span><span class="num">2.</span> Adding and Subtracting</span> <span class="tag">Coming soon</span></li>
+      <li class="soon"><span><span class="num">3.</span> Multiplication</span> <span class="tag">Coming soon</span></li>
+      <li class="soon"><span><span class="num">4.</span> Division</span> <span class="tag">Coming soon</span></li>
+      <li class="soon"><span><span class="num">5.</span> Improper Fractions and Mixed Numbers</span> <span class="tag">Coming soon</span></li>
+      <li class="soon"><span><span class="num">6.</span> Fractions</span> <span class="tag">Coming soon</span></li>
+      <li class="soon"><span><span class="num">7.</span> Decimals</span> <span class="tag">Coming soon</span></li>
+      <li class="soon"><span><span class="num">8.</span> Integers</span> <span class="tag">Coming soon</span></li>
+    </ul>
+  </section>
+
+  <!-- ============ LESSON ============ -->
+  <section id="lesson" class="hidden">
+    <p style="margin:1.75rem 0 0"><button class="btn ghost small" type="button" onclick="home()">&larr; All skills</button></p>
+    <h1>Place Value</h1>
+    <p class="lede">Where a digit sits in a number tells you how much it is worth.</p>
+
+    <div class="card">
+      <div class="cardhead">
+        <h2>Words you need</h2>
+        <button class="speak" type="button" aria-pressed="false" data-read="vocab">Read aloud</button>
+      </div>
+      <dl class="vocab" id="vocab">
+        <div><dt>Digit</dt><dd>One number symbol. The digits are 0, 1, 2, 3, 4, 5, 6, 7, 8, and 9.</dd></div>
+        <div><dt>Place</dt><dd>The spot a digit sits in. Ones, tens, hundreds, and so on.</dd></div>
+        <div><dt>Value</dt><dd>How much that digit is really worth.</dd></div>
+      </dl>
+    </div>
+
+    <div class="card">
+      <div class="cardhead">
+        <h2>The big idea</h2>
+        <button class="speak" type="button" aria-pressed="false" data-read="idea">Read aloud</button>
+      </div>
+      <div id="idea">
+        <p>The same digit can be worth a lot or a little. It depends on where it sits.</p>
+        <p>Look at the 5 in each number below.</p>
+        <p class="math">52 &nbsp;&rarr;&nbsp; the 5 is worth 50</p>
+        <p class="math">527 &nbsp;&rarr;&nbsp; the 5 is worth 500</p>
+        <p style="margin-top:1rem">Every time you move one place to the left, the digit is worth 10 times more.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardhead">
+        <h2>The place value chart</h2>
+        <button class="speak" type="button" aria-pressed="false" data-read="chartnote">Read aloud</button>
+      </div>
+      <div class="scroller">
+        <table class="pv">
+          <caption>The number 373,548 written in a place value chart.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Hundred<br>thousands</th>
+              <th scope="col">Ten<br>thousands</th>
+              <th scope="col">Thousands</th>
+              <th scope="col">Hundreds</th>
+              <th scope="col">Tens</th>
+              <th scope="col">Ones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>3</td><td>7</td><td>3</td><td class="mark">5</td><td>4</td><td>8</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p id="chartnote">Always fill the chart in starting from the right. The last digit of your number goes in the ones column.</p>
+    </div>
+
+    <div class="card">
+      <div class="cardhead">
+        <h2>How to find the value of a digit</h2>
+        <button class="speak" type="button" aria-pressed="false" data-read="steps">Read aloud</button>
+      </div>
+      <p>Take it one step at a time. Example: <strong>What is the 5 worth in 373,548?</strong></p>
+      <ol class="steps" id="steps">
+        <li data-step="1"><p>Write the number in the chart. Start from the right side.</p></li>
+        <li data-step="2" class="hidden"><p>Find the digit you were asked about. Here it is the <strong>5</strong>.</p></li>
+        <li data-step="3" class="hidden"><p>Read the name at the top of its column. The 5 is in the <strong>hundreds</strong> place.</p></li>
+        <li data-step="4" class="hidden"><p>Write the digit, then add one zero for every column to its right.</p><p class="math">5 &rarr; 500</p></li>
+        <li data-step="5" class="hidden"><p>The 5 in 373,548 is worth <strong>500</strong>.</p></li>
+      </ol>
+      <div class="row" style="margin-top:1.25rem">
+        <button class="btn" type="button" id="next">Show next step</button>
+        <button class="btn ghost" type="button" id="reset">Start over</button>
+      </div>
+      <p aria-live="polite" class="visually-hidden" id="stepsread">Step 1 of 5 showing.</p>
+    </div>
+
+    <div class="card note">
+      <h3>Watch out for this</h3>
+      <p style="margin:0">Do not say the digit by itself. In 373,548 the 5 is not "five." It is "five hundred." The place changes what it is worth.</p>
+    </div>
+
+    <div class="card">
+      <div class="cardhead">
+        <h2>Try it yourself</h2>
+        <button class="speak" type="button" aria-pressed="false" data-read="qs">Read aloud</button>
+      </div>
+      <p>Type your answer and press Check. If you get it wrong, you can try again.</p>
+      <div id="qs"></div>
+    </div>
+
+    <p><button class="btn ghost" type="button" onclick="home()">&larr; Back to all skills</button></p>
+  </section>
+
+  <footer>
+    <p>ALC Resources &middot; Adult Learning Center math reference</p>
+  </footer>
+</main>
+
+<script>
+/* ---------- navigation ---------- */
+function go(){document.getElementById('home').classList.add('hidden');document.getElementById('lesson').classList.remove('hidden');window.scrollTo(0,0);document.getElementById('main').focus?.();}
+function home(){stopSpeech();document.getElementById('lesson').classList.add('hidden');document.getElementById('home').classList.remove('hidden');window.scrollTo(0,0);}
+
+/* ---------- step walkthrough ---------- */
+var shown=1, total=5;
+var stepsEl=document.getElementById('steps');
+var live=document.getElementById('stepsread');
+document.getElementById('next').addEventListener('click',function(){
+  if(shown>=total)return;
+  shown++;
+  var li=stepsEl.querySelector('[data-step="'+shown+'"]');
+  li.classList.remove('hidden');
+  live.textContent='Step '+shown+' of '+total+'. '+li.textContent.trim();
+  if(shown>=total){this.disabled=true;this.textContent='That is the last step';}
+});
+document.getElementById('reset').addEventListener('click',function(){
+  shown=1;
+  stepsEl.querySelectorAll('[data-step]').forEach(function(li){
+    if(li.getAttribute('data-step')!=='1')li.classList.add('hidden');
+  });
+  var n=document.getElementById('next');n.disabled=false;n.textContent='Show next step';
+  live.textContent='Back to step 1 of '+total+'.';
+});
+
+/* ---------- practice ---------- */
+var questions=[
+  {q:'In <strong>8,472</strong>, what is the 4 worth?',
+   ok:['400','fourhundred'],
+   hint:'Close. The 4 sits in the hundreds column. There are two digits to its right, so write 4 then two zeros.'},
+  {q:'In <strong>56,109</strong>, what is the 5 worth?',
+   ok:['50000','50,000','fiftythousand'],
+   hint:'Not yet. Count the columns to the right of the 5. There are four of them, so write 5 then four zeros.'},
+  {q:'In <strong>92,346</strong>, which digit is in the thousands place?',
+   ok:['2','two'],
+   hint:'Try again. Start at the right and count left: 6 is ones, 4 is tens, 3 is hundreds. What comes next?'}
+];
+var box=document.getElementById('qs');
+questions.forEach(function(item,i){
+  var d=document.createElement('div');
+  d.className='q';
+  d.innerHTML='<h3 id="ql'+i+'">Question '+(i+1)+'</h3><p>'+item.q+'</p>'+
+    '<div class="row"><label class="visually-hidden" for="a'+i+'">Your answer for question '+(i+1)+'</label>'+
+    '<input id="a'+i+'" type="text" inputmode="numeric" autocomplete="off" aria-describedby="f'+i+'">'+
+    '<button class="btn small" type="button" data-i="'+i+'">Check</button></div>'+
+    '<p class="fb hidden" id="f'+i+'" role="status" aria-live="polite"></p>';
+  box.appendChild(d);
+});
+function norm(s){return String(s).toLowerCase().replace(/[\s,$]/g,'');}
+box.addEventListener('click',function(e){
+  var b=e.target.closest('button[data-i]'); if(!b)return;
+  var i=+b.getAttribute('data-i');
+  var val=norm(document.getElementById('a'+i).value);
+  var fb=document.getElementById('f'+i);
+  fb.classList.remove('hidden','ok','no');
+  if(!val){fb.classList.add('fb','no');fb.textContent='Type an answer first, then press Check.';return;}
+  var right=questions[i].ok.some(function(a){return norm(a)===val;});
+  fb.classList.add('fb',right?'ok':'no');
+  fb.textContent = right ? 'Correct. Nice work.' : questions[i].hint;
+});
+
+/* ---------- read aloud ---------- */
+var current=null;
+function stopSpeech(){
+  if(window.speechSynthesis)window.speechSynthesis.cancel();
+  document.querySelectorAll('.speak[aria-pressed="true"]').forEach(function(b){
+    b.setAttribute('aria-pressed','false');b.textContent='Read aloud';
+  });
+  current=null;
+}
+document.querySelectorAll('.speak').forEach(function(btn){
+  if(!('speechSynthesis' in window)){btn.remove();return;}
+  btn.addEventListener('click',function(){
+    var wasOn=btn.getAttribute('aria-pressed')==='true';
+    stopSpeech();
+    if(wasOn)return;
+    var src=document.getElementById(btn.getAttribute('data-read'));
+    if(!src)return;
+    var c=src.cloneNode(true);
+    c.querySelectorAll('.hidden,.visually-hidden').forEach(function(n){n.remove();});
+    var text=(c.textContent||'').replace(/\s+/g,' ').trim();
+    var u=new SpeechSynthesisUtterance(text);
+    u.rate=.85; u.pitch=1;
+    u.onend=function(){btn.setAttribute('aria-pressed','false');btn.textContent='Read aloud';};
+    btn.setAttribute('aria-pressed','true');btn.textContent='Stop reading';
+    window.speechSynthesis.speak(u);
+  });
+});
+</script>
+<style>.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}</style>
+</body>
+</html>

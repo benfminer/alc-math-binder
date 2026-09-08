@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ALC Math Help</title>
+<style>
+:root{
+  --primary:#e60012; --signal:#f68d1f; --amber:#ecab37; --nav-gold:#e48600;
+  --canvas:#7a8aba; --peri:#8ba1d4; --sky:#9fbee7; --lav:#acace7; --ice:#c0d5e6;
+  --chrome:#3d4f97; --muted:#60619c; --plat:#dedede; --white:#fff; --carbon:#21242e;
+  --teal:#206479; --gamesred:#a7282b;
+  --edge-lt:#b3c0e0; --edge-lt2:#a0b0d8;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--canvas); color:var(--carbon);
+  font-family:Arial,Helvetica,sans-serif; font-size:19px; line-height:1.6;
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:100% 3px;
+}
+.shell{max-width:56rem;margin:0 auto;padding:0 .75rem 3rem}
+.skip{position:absolute;left:-9999px;background:var(--carbon);color:#fff;padding:.8rem 1.1rem;z-index:99;font-weight:700}
+.skip:focus{left:0}
+:focus-visible{outline:4px solid #fff;outline-offset:2px;box-shadow:0 0 0 7px var(--carbon)}
+
+.chamfer{clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px)}
+.carbon{
+  background-color:var(--carbon);
+  background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,.13) 1px,transparent 1.7px);
+  background-size:5px 5px;
+}
+
+/* ---------- masthead ---------- */
+.masthead{display:flex;align-items:flex-end;gap:.85rem;padding:.85rem 0 .6rem;flex-wrap:wrap}
+.mascot{flex:none;width:56px;height:56px}
+.bubble{position:relative;background:#fff;border:3px solid var(--carbon);border-radius:10px;
+  padding:.5rem .9rem;font-size:.95rem;font-weight:700;color:var(--carbon)}
+.bubble::after{content:"";position:absolute;left:-13px;bottom:13px;border:7px solid transparent;border-right-color:var(--carbon)}
+.bubble::before{content:"";position:absolute;left:-8px;bottom:13px;z-index:1;border:7px solid transparent;border-right-color:#fff}
+
+/* ---------- nav ---------- */
+.navbar{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;padding:.45rem .6rem;
+  border-top:2px solid #4a4f60;border-bottom:3px solid #000}
+.logo-pill{background:#fff;color:var(--primary);border-radius:999px;padding:.28rem .85rem;
+  font-weight:900;font-style:italic;letter-spacing:.02em;font-size:.9rem;border:2px solid var(--carbon);flex:none}
+.navlinks{display:flex;gap:.15rem;flex-wrap:wrap;margin-left:.35rem}
+.navlinks button{font:inherit;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  background:transparent;border:2px solid transparent;color:var(--nav-gold);padding:.5rem .65rem;cursor:pointer;min-height:44px}
+.navlinks button:hover{color:#ffc45e}
+.navlinks button[aria-current="true"]{background:var(--amber);color:var(--carbon);border-color:#fff}
+.subnav{background:var(--sky);border-bottom:3px solid var(--chrome);border-top:2px solid #c2d8f0;
+  padding:.45rem .7rem;display:flex;gap:.3rem;flex-wrap:wrap;align-items:center}
+.subnav .st{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--carbon)}
+.subnav .sep{color:var(--chrome);font-weight:700}
+.subnav button{font:inherit;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  background:#fff;color:var(--carbon);border:2px solid var(--chrome);border-radius:2px;
+  padding:.5rem .7rem;cursor:pointer;min-height:44px}
+#subtabs{display:flex;gap:.3rem;flex-wrap:wrap}
+#subtabs[hidden]{display:none}
+.subnav button:hover{background:var(--ice)}
+.subnav button[aria-current="true"]{background:var(--carbon);color:var(--amber);border-color:var(--carbon)}
+
+/* ---------- hero ---------- */
+.hero{margin-top:1rem;padding:1.5rem 1.25rem;position:relative;overflow:hidden;
+  border-top:2px solid rgba(255,255,255,.5);border-bottom:3px solid var(--chrome);
+  border-left:2px solid rgba(255,255,255,.35);border-right:2px solid var(--chrome)}
+.t-lav{background:var(--lav);background-image:radial-gradient(circle at 20% 20%,rgba(255,255,255,.55),transparent 55%)}
+.t-ice{background:var(--ice);background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.28) 0 10px,transparent 10px 20px)}
+.t-teal{background:var(--teal);
+  background-image:linear-gradient(rgba(90,220,220,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(90,220,220,.16) 1px,transparent 1px);
+  background-size:22px 22px}
+.t-red{background:var(--gamesred);background-image:repeating-linear-gradient(100deg,rgba(255,255,255,.16) 0 3px,transparent 3px 16px)}
+.wordmark{margin:0;font-family:"Arial Black",Arial,sans-serif;font-weight:900;font-style:italic;
+  font-size:clamp(1.9rem,6.5vw,2.9rem);line-height:1.02;letter-spacing:-.01em;color:#fff;
+  -webkit-text-stroke:6px var(--carbon);paint-order:stroke fill;text-shadow:4px 4px 0 var(--carbon)}
+@supports not (paint-order:stroke){
+  .wordmark{-webkit-text-stroke:0;
+    text-shadow:-3px -3px 0 var(--carbon),3px -3px 0 var(--carbon),-3px 3px 0 var(--carbon),3px 3px 0 var(--carbon),6px 6px 0 var(--carbon)}
+}
+.hero .tag{margin:.85rem 0 0;font-weight:700;font-size:1.05rem;color:var(--carbon);max-width:46ch}
+.hero.t-teal .tag,.hero.t-red .tag{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.55)}
+
+/* ---------- panels ---------- */
+.panel{margin-top:1rem}
+.panelhead{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;background:var(--canvas);
+  border-top:2px solid var(--edge-lt);border-bottom:3px solid var(--chrome);padding:.6rem .8rem}
+.panelhead h2{margin:0;font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--carbon)}
+.glyph{flex:none;width:15px;height:15px;background:var(--carbon);
+  background-image:linear-gradient(var(--canvas) 3px,transparent 3px);background-size:100% 5px}
+.panelbody{background:var(--white);border-left:2px solid var(--edge-lt2);border-right:2px solid var(--chrome);
+  border-bottom:3px solid var(--chrome);padding:1.35rem 1.25rem}
+.panelbody.plat{background:var(--plat)}
+.panelbody > :last-child{margin-bottom:0}
+.panelbody h3{font-size:1.15rem;margin:1.6rem 0 .5rem}
+.panelbody h3:first-child{margin-top:0}
+p{margin:0 0 1rem;max-width:62ch}
+.lead{font-size:1.05rem}
+
+/* ---------- cartridges ---------- */
+.carts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.7rem}
+.cart{background:var(--peri);border-top:3px solid #b9c8e8;border-left:3px solid #a5b6de;
+  border-right:3px solid var(--chrome);border-bottom:4px solid var(--chrome);
+  padding:1rem .9rem;text-align:left;font:inherit;cursor:pointer;color:var(--carbon);min-height:44px;
+  display:flex;flex-direction:column;gap:.45rem}
+.cart:hover{background:#9db1de}
+.cart:active{border-top-color:var(--chrome);border-bottom-color:#b9c8e8}
+.cart .kicker{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#2b3357}
+.cart .nm{font-family:"Arial Black",Arial,sans-serif;font-weight:900;font-style:italic;font-size:1.2rem;line-height:1.05}
+.cart .ds{font-size:.9rem;line-height:1.35}
+
+/* ---------- buttons ---------- */
+.btn{font:inherit;font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  background:var(--signal);color:var(--carbon);border-radius:2px;cursor:pointer;padding:.7rem 1.1rem;min-height:44px;
+  border:2px solid #ffc98c;border-top-color:#ffd9ae;border-right-color:#a85f0c;border-bottom-color:#a85f0c}
+.btn:hover{background:#ffa441}
+.btn:active{border-top-color:#a85f0c;border-bottom-color:#ffd9ae}
+.btn[disabled]{background:var(--muted);color:#eef0fa;border-color:#7b7cb5;cursor:default}
+.btn.dark{background:var(--carbon);color:#fff;border-color:#5a6070;border-top-color:#767c8f;border-bottom-color:#000;border-right-color:#000}
+.btn.dark:hover{background:#343949}
+.row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:1.1rem}
+
+/* ---------- math slabs ---------- */
+.formula{display:inline-block;background:var(--carbon);color:#fff;font-family:"Courier New",monospace;
+  font-size:1.35rem;font-weight:700;padding:.7rem 1.05rem;border-radius:2px;margin:.3rem 0 1rem;
+  border-top:2px solid #5a6070;border-bottom:3px solid #000}
+.formula .u{color:var(--amber)}
+.formula .hl{background:var(--amber);color:var(--carbon);padding:0 .22rem;border-radius:2px}
+.units{background:var(--amber);color:var(--carbon);border-radius:2px;padding:.1rem .45rem;font-weight:700;font-size:.9em;white-space:nowrap}
+
+/* fractions */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .3rem;line-height:1.12}
+.frac .n{padding:0 .3rem}
+.frac .d{padding:0 .3rem;border-top:3px solid currentColor}
+.eqn{display:inline-flex;align-items:center;flex-wrap:wrap;gap:.4rem;font-size:1.45rem;font-weight:700;
+  background:var(--carbon);color:#fff;padding:.65rem 1rem;border-radius:2px;margin:.3rem 0 1rem;
+  border-top:2px solid #5a6070;border-bottom:3px solid #000}
+.eqn.inline{font-size:1.05rem;padding:.3rem .55rem;margin:0;vertical-align:middle}
+.eqn .gold{color:var(--amber)}
+
+/* place value table */
+.scroller{overflow-x:auto;margin:0 0 1.25rem}
+table.pv{border-collapse:collapse;width:100%;min-width:430px;font-variant-numeric:tabular-nums}
+table.pv caption{text-align:left;font-size:.85rem;font-weight:700;color:#2b3357;margin-bottom:.5rem}
+table.pv th,table.pv td{border:2px solid var(--carbon);padding:.55rem .3rem;text-align:center}
+table.pv th{background:var(--carbon);color:var(--amber);font-size:.66rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.04em;line-height:1.25}
+table.pv td{font-size:1.5rem;font-weight:700;background:#fff}
+table.pv td.mark{background:var(--amber)}
+
+/* order-of-ops table */
+table.ord{border-collapse:collapse;width:100%;margin:0 0 1.25rem}
+table.ord th,table.ord td{border:2px solid var(--carbon);padding:.7rem .8rem;text-align:left;vertical-align:top;font-size:.98rem}
+table.ord thead th{background:var(--carbon);color:var(--amber);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em}
+table.ord tbody th{background:var(--peri);width:3.6rem;text-align:center;font-size:.8rem;text-transform:uppercase}
+table.ord td.sym{font-family:"Courier New",monospace;font-size:1.25rem;font-weight:700;width:5rem;text-align:center;background:var(--plat)}
+
+/* ---------- steps ---------- */
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding:1rem 0 1rem 3.5rem}
+ol.steps li + li{border-top:2px solid var(--plat)}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:1rem;width:2.5rem;height:2.5rem;
+  background:var(--carbon);color:var(--amber);font-weight:900;display:grid;place-items:center;font-size:1.1rem;
+  border-top:2px solid #5a6070;border-bottom:3px solid #000}
+ol.steps li:first-child{padding-top:.15rem}
+ol.steps li:first-child::before{top:.15rem}
+ol.steps li p{margin:0}
+ol.steps li p + p{margin-top:.5rem}
+.hidden{display:none}
+
+.notice{background:#fff5dd;border-left:10px solid var(--amber);padding:1.1rem 1.2rem;margin:1.25rem 0 0}
+.notice h4{margin:0 0 .4rem;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#7a5300}
+.notice p{margin:0}
+.notice p + p{margin-top:.6rem}
+
+/* ---------- practice ---------- */
+.q + .q{border-top:2px solid var(--plat);margin-top:1.4rem;padding-top:1.4rem}
+.q h4{margin:0 0 .5rem;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--chrome)}
+.q input{font:inherit;font-size:1.1rem;font-weight:700;padding:.6rem .75rem;border:3px solid var(--carbon);
+  border-radius:2px;width:9.5rem;min-height:44px;background:#fff;color:var(--carbon)}
+.choices{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem}
+.choices button{font:inherit;font-size:.9rem;font-weight:700;background:#fff;color:var(--carbon);
+  border:3px solid var(--carbon);border-radius:2px;padding:.6rem 1rem;cursor:pointer;min-height:44px}
+.choices button:hover{background:var(--sky)}
+.fb{margin-top:.9rem;padding:.85rem 1rem;font-weight:700;border-left:10px solid;font-size:1rem}
+.fb.ok{background:#dff3e4;color:#0b5c2e;border-color:#0b5c2e}
+.fb.no{background:#fff5dd;color:#7a5300;border-color:var(--amber)}
+
+figure{margin:0 0 1.25rem;background:var(--plat);padding:1rem;border:2px solid var(--chrome)}
+figure svg{display:block;width:100%;height:auto;max-width:420px;margin:0 auto}
+figcaption{margin-top:.6rem;font-size:.9rem;font-weight:700;color:#2b3357;text-align:center}
+
+.foot{margin-top:1.25rem;padding:1.15rem 1rem;color:#c9d3ee;font-size:.8rem}
+.foot p{margin:0 0 .35rem;max-width:none}
+.esrb{display:inline-block;background:var(--amber);color:var(--carbon);font-size:.66rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.05em;padding:.25rem .55rem;border-radius:2px;margin-top:.4rem}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+@media (max-width:560px){ body{font-size:18px} .panelbody{padding:1.1rem .9rem} .formula{font-size:1.15rem} }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<div class="shell">
+
+  <div class="masthead">
+    <svg class="mascot" viewBox="0 0 16 16" role="img" aria-label="Pixel-art mascot: a friendly calculator">
+      <g shape-rendering="crispEdges">
+        <rect x="3" y="1" width="10" height="14" fill="#21242e"/>
+        <rect x="4" y="2" width="8" height="4" fill="#c0d5e6"/>
+        <rect x="5" y="3" width="2" height="2" fill="#21242e"/>
+        <rect x="9" y="3" width="2" height="2" fill="#21242e"/>
+        <rect x="4" y="7" width="2" height="2" fill="#f68d1f"/><rect x="7" y="7" width="2" height="2" fill="#ecab37"/><rect x="10" y="7" width="2" height="2" fill="#f68d1f"/>
+        <rect x="4" y="10" width="2" height="2" fill="#ecab37"/><rect x="7" y="10" width="2" height="2" fill="#f68d1f"/><rect x="10" y="10" width="2" height="2" fill="#ecab37"/>
+        <rect x="2" y="4" width="1" height="3" fill="#e60012"/><rect x="13" y="4" width="1" height="3" fill="#e60012"/>
+      </g>
+    </svg>
+    <p class="bubble">Welcome to ALC Math Help!</p>
+  </div>
+
+  <nav class="navbar carbon" aria-label="Main">
+    <span class="logo-pill">ALC MATH</span>
+    <div class="navlinks">
+      <button type="button" data-view="home" data-group="home" aria-current="true">Home</button>
+      <button type="button" data-view="pv" data-group="pv" aria-current="false">Place Value</button>
+      <button type="button" data-view="fr" data-group="fr" aria-current="false">Fractions</button>
+      <button type="button" data-view="oo" data-group="oo" aria-current="false">Order of Ops</button>
+      <button type="button" data-view="ms-which" data-group="ms" aria-current="false">Measuring</button>
+    </div>
+  </nav>
+
+  <div class="subnav">
+    <span class="st" id="crumb">ALC Resources &middot; Math Reference</span>
+    <span class="sep" id="crumbsep" hidden>|</span>
+    <div id="subtabs" hidden>
+      <button type="button" data-view="ms-which" data-group="ms">Which One?</button>
+      <button type="button" data-view="ms-p" data-group="ms">Perimeter</button>
+      <button type="button" data-view="ms-a" data-group="ms">Area</button>
+      <button type="button" data-view="ms-v" data-group="ms">Volume</button>
+    </div>
+  </div>
+
+  <main id="main" tabindex="-1">
+
+  <!-- ==================== HOME ==================== -->
+  <section id="v-home">
+    <div class="hero t-lav chamfer">
+      <h1 class="wordmark">ALC MATH<br>HELP</h1>
+      <p class="tag">Forgot how to do something? Pick a skill below. Every one gives you the steps one at a time, an example to follow, and problems to try.</p>
+    </div>
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Pick Your Skill</h2></div>
+      <div class="panelbody">
+        <div class="carts">
+          <button class="cart" type="button" data-view="pv" data-group="pv">
+            <span class="kicker">Skill 01</span><span class="nm">PLACE VALUE</span>
+            <span class="ds">What a digit is really worth, based on where it sits.</span></button>
+          <button class="cart" type="button" data-view="fr" data-group="fr">
+            <span class="kicker">Skill 02</span><span class="nm">DIVIDING FRACTIONS</span>
+            <span class="ds">Keep it, change it, flip it. Then multiply.</span></button>
+          <button class="cart" type="button" data-view="oo" data-group="oo">
+            <span class="kicker">Skill 03</span><span class="nm">ORDER OF OPS</span>
+            <span class="ds">Which part of a long problem do you do first?</span></button>
+          <button class="cart" type="button" data-view="ms-which" data-group="ms">
+            <span class="kicker">Skill 04</span><span class="nm">MEASURING</span>
+            <span class="ds">Perimeter, area and volume. Around it, cover it, fill it.</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>How To Use This</h2></div>
+      <div class="panelbody plat">
+        <p>Nothing here is a test. There is no score and nothing is saved. Look up whatever you forgot, as many times as you want.</p>
+        <p style="margin:0">Every skill works the same way, so once you learn your way around one, you know them all.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PLACE VALUE ==================== -->
+  <section id="v-pv" class="hidden">
+    <div class="hero t-ice chamfer">
+      <h1 class="wordmark">PLACE VALUE</h1>
+      <p class="tag">Where a digit sits in a number tells you how much it is worth.</p>
+    </div>
+
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Words You Need</h2></div>
+      <div class="panelbody">
+        <h3>Digit</h3><p>One number symbol. The digits are 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9.</p>
+        <h3>Place</h3><p>The spot a digit sits in. Ones, tens, hundreds, and so on.</p>
+        <h3>Value</h3><p>How much that digit is really worth.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>The Big Idea</h2></div>
+      <div class="panelbody">
+        <p class="lead">The same digit can be worth a lot or a little. It depends on where it sits.</p>
+        <p>Look at the 5 in each of these numbers.</p>
+        <p class="formula"><span class="hl">5</span>2 &nbsp;&rarr;&nbsp; the 5 is worth 50</p><br>
+        <p class="formula"><span class="hl">5</span>27 &nbsp;&rarr;&nbsp; the 5 is worth 500</p>
+        <p>Every time you move one place to the left, the digit is worth 10 times more.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>The Place Value Chart</h2></div>
+      <div class="panelbody">
+        <div class="scroller">
+          <table class="pv">
+            <caption>The number 373,548 written in a place value chart</caption>
+            <thead><tr>
+              <th scope="col">Hundred<br>thousands</th><th scope="col">Ten<br>thousands</th><th scope="col">Thousands</th>
+              <th scope="col">Hundreds</th><th scope="col">Tens</th><th scope="col">Ones</th>
+            </tr></thead>
+            <tbody><tr><td>3</td><td>7</td><td>3</td><td class="mark">5</td><td>4</td><td>8</td></tr></tbody>
+          </table>
+        </div>
+        <p style="margin:0">Always fill the chart in starting from the right. The last digit of your number goes in the ones column.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Worked Example</h2></div>
+      <div class="panelbody">
+        <p>What is the <strong>5</strong> worth in <strong>373,548</strong>?</p>
+        <ol class="steps" id="pv-steps" data-total="5">
+          <li data-step="1"><p>Write the number in the chart. Start from the right side.</p></li>
+          <li data-step="2" class="hidden"><p>Find the digit you were asked about. Here it is the <strong>5</strong>.</p></li>
+          <li data-step="3" class="hidden"><p>Read the name at the top of its column. The 5 sits in the <strong>hundreds</strong> place.</p></li>
+          <li data-step="4" class="hidden"><p>Write the digit, then add one zero for every column to its right. There are two columns to the right.</p>
+            <p class="formula">5 &rarr; 5<span class="hl">00</span></p></li>
+          <li data-step="5" class="hidden"><p>The 5 in 373,548 is worth <strong>500</strong>.</p></li>
+        </ol>
+        <div class="row">
+          <button class="btn" type="button" data-next="pv-steps"><span class="vh">Show next step</span><span aria-hidden="true">&#9654; Next Step</span></button>
+          <button class="btn dark" type="button" data-reset="pv-steps">Start Over</button>
+        </div>
+        <p class="vh" aria-live="polite" data-live="pv-steps"></p>
+        <div class="notice"><h4>Watch out for this</h4>
+          <p>Do not say the digit by itself. In 373,548 the 5 is not "five." It is "five hundred." The place changes what it is worth.</p></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Try It Yourself</h2></div>
+      <div class="panelbody"><div class="qbox" data-set="pv"></div></div>
+    </div>
+    <div class="panel"><div class="panelbody plat"><button class="btn dark" type="button" data-view="home" data-group="home">&#9664; Back to all skills</button></div></div>
+  </section>
+
+  <!-- ==================== FRACTIONS ==================== -->
+  <section id="v-fr" class="hidden">
+    <div class="hero t-teal chamfer">
+      <h1 class="wordmark">DIVIDING<br>FRACTIONS</h1>
+      <p class="tag">There is a trick for this one. You never really divide. You flip the second fraction and multiply instead.</p>
+    </div>
+
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>What It Means</h2></div>
+      <div class="panelbody">
+        <p class="lead">When you see this:</p>
+        <p class="eqn"><span class="frac"><span class="n">1</span><span class="d">2</span></span> &divide; <span class="frac"><span class="n">1</span><span class="d">4</span></span></p>
+        <p>you are really asking: <strong>how many quarters fit inside one half?</strong></p>
+        <p style="margin:0">The answer is 2. Half a pizza holds two quarter slices.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>First, Learn The Flip</h2></div>
+      <div class="panelbody">
+        <p>To flip a fraction, swap the top number and the bottom number. The flipped fraction is called the <strong>reciprocal</strong>.</p>
+        <p class="eqn"><span class="frac"><span class="n">2</span><span class="d">9</span></span> <span style="font-size:.8em">flips to</span> <span class="frac gold"><span class="n">9</span><span class="d">2</span></span></p>
+        <p>A whole number flips too. Put a 1 underneath it first.</p>
+        <p class="eqn">7 = <span class="frac"><span class="n">7</span><span class="d">1</span></span> <span style="font-size:.8em">flips to</span> <span class="frac gold"><span class="n">1</span><span class="d">7</span></span></p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Worked Example</h2></div>
+      <div class="panelbody">
+        <p>Solve <span class="eqn inline"><span class="frac"><span class="n">3</span><span class="d">4</span></span> &divide; <span class="frac"><span class="n">2</span><span class="d">3</span></span></span></p>
+        <ol class="steps" id="fr-steps" data-total="5">
+          <li data-step="1"><p><strong>Keep</strong> the first fraction exactly as it is.</p>
+            <p class="eqn"><span class="frac gold"><span class="n">3</span><span class="d">4</span></span> &divide; <span class="frac"><span class="n">2</span><span class="d">3</span></span></p></li>
+          <li data-step="2" class="hidden"><p><strong>Change</strong> the divide sign to a multiply sign.</p>
+            <p class="eqn"><span class="frac"><span class="n">3</span><span class="d">4</span></span> <span class="gold">&times;</span> <span class="frac"><span class="n">2</span><span class="d">3</span></span></p></li>
+          <li data-step="3" class="hidden"><p><strong>Flip</strong> the second fraction. Only the second one.</p>
+            <p class="eqn"><span class="frac"><span class="n">3</span><span class="d">4</span></span> &times; <span class="frac gold"><span class="n">3</span><span class="d">2</span></span></p></li>
+          <li data-step="4" class="hidden"><p><strong>Multiply</strong> straight across. Tops together, then bottoms together.</p>
+            <p class="formula">3 &times; 3 = 9 &nbsp;&nbsp; 4 &times; 2 = 8</p>
+            <p class="eqn"><span class="frac gold"><span class="n">9</span><span class="d">8</span></span></p></li>
+          <li data-step="5" class="hidden"><p><strong>Tidy up.</strong> The top is bigger than the bottom, so write it as a mixed number.</p>
+            <p class="eqn"><span class="frac"><span class="n">9</span><span class="d">8</span></span> = 1<span class="frac"><span class="n">1</span><span class="d">8</span></span></p></li>
+        </ol>
+        <div class="row">
+          <button class="btn" type="button" data-next="fr-steps"><span class="vh">Show next step</span><span aria-hidden="true">&#9654; Next Step</span></button>
+          <button class="btn dark" type="button" data-reset="fr-steps">Start Over</button>
+        </div>
+        <p class="vh" aria-live="polite" data-live="fr-steps"></p>
+        <div class="notice"><h4>Watch out for this</h4>
+          <p>Only the <strong>second</strong> fraction gets flipped. Flipping the first one is the most common mistake on this skill. Say it out loud as you work: <em>keep, change, flip.</em></p></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Try It Yourself</h2></div>
+      <div class="panelbody">
+        <p>Type fractions like this: <strong>9/8</strong>. Mixed numbers like this: <strong>1 1/8</strong>. Either form is fine.</p>
+        <div class="qbox" data-set="fr"></div>
+      </div>
+    </div>
+    <div class="panel"><div class="panelbody plat"><button class="btn dark" type="button" data-view="home" data-group="home">&#9664; Back to all skills</button></div></div>
+  </section>
+
+  <!-- ==================== ORDER OF OPS ==================== -->
+  <section id="v-oo" class="hidden">
+    <div class="hero t-red chamfer">
+      <h1 class="wordmark">ORDER OF<br>OPERATIONS</h1>
+      <p class="tag">When a problem has more than one operation, you cannot just work left to right. There is an order you have to follow.</p>
+    </div>
+
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Why The Order Matters</h2></div>
+      <div class="panelbody">
+        <p class="lead">Look at <strong>5 + 3 &times; 2</strong>.</p>
+        <p>If you go left to right you get 16. That answer is wrong.</p>
+        <p>Multiply first, then add, and you get <strong>11</strong>. That is the right answer.</p>
+        <p style="margin:0">Everybody has to use the same order. Otherwise we would all get different answers to the same problem.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>The Order</h2></div>
+      <div class="panelbody">
+        <table class="ord">
+          <caption class="vh">The four stages of the order of operations, in order</caption>
+          <thead><tr><th scope="col">Do this</th><th scope="col">Sign</th><th scope="col">What it means</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">1st</th><td class="sym">( )</td><td>Anything inside parentheses. Finish it completely before you do anything else.</td></tr>
+            <tr><th scope="row">2nd</th><td class="sym">4&sup3;</td><td>Exponents. A small raised number means multiply the base by itself that many times.</td></tr>
+            <tr><th scope="row">3rd</th><td class="sym">&times; &divide;</td><td>Multiply and divide. Work <strong>left to right</strong>, whichever one you meet first.</td></tr>
+            <tr><th scope="row">4th</th><td class="sym">+ &minus;</td><td>Add and subtract. Work <strong>left to right</strong>, whichever one you meet first.</td></tr>
+          </tbody>
+        </table>
+        <div class="notice"><h4>The most common mistake</h4>
+          <p>Multiply and divide are <strong>equal partners</strong>. So are add and subtract. You do not do all the multiplying first.</p>
+          <p>In <strong>36 &divide; 6 &times; 2</strong> you divide first, because the divide sign comes first when you read left to right.</p></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Worked Example</h2></div>
+      <div class="panelbody">
+        <p>Solve <span class="formula" style="font-size:1.05rem;padding:.35rem .6rem;margin:0">4&sup3; &minus; 36 &divide; 6 + 2 (9 + 12)</span></p>
+        <ol class="steps" id="oo-steps" data-total="6">
+          <li data-step="1"><p>Parentheses first. <strong>9 + 12 = 21</strong></p>
+            <p class="formula">4&sup3; &minus; 36 &divide; 6 + 2 &times; <span class="hl">21</span></p></li>
+          <li data-step="2" class="hidden"><p>Now the exponent. <strong>4&sup3; means 4 &times; 4 &times; 4 = 64</strong></p>
+            <p class="formula"><span class="hl">64</span> &minus; 36 &divide; 6 + 2 &times; 21</p></li>
+          <li data-step="3" class="hidden"><p>Multiply and divide, left to right. The divide sign comes first. <strong>36 &divide; 6 = 6</strong></p>
+            <p class="formula">64 &minus; <span class="hl">6</span> + 2 &times; 21</p></li>
+          <li data-step="4" class="hidden"><p>Keep going left to right. <strong>2 &times; 21 = 42</strong></p>
+            <p class="formula">64 &minus; 6 + <span class="hl">42</span></p></li>
+          <li data-step="5" class="hidden"><p>Add and subtract, left to right. The minus sign comes first. <strong>64 &minus; 6 = 58</strong></p>
+            <p class="formula"><span class="hl">58</span> + 42</p></li>
+          <li data-step="6" class="hidden"><p>Last step. <strong>58 + 42 = 100</strong></p>
+            <p class="formula"><span class="hl">100</span></p></li>
+        </ol>
+        <div class="row">
+          <button class="btn" type="button" data-next="oo-steps"><span class="vh">Show next step</span><span aria-hidden="true">&#9654; Next Step</span></button>
+          <button class="btn dark" type="button" data-reset="oo-steps">Start Over</button>
+        </div>
+        <p class="vh" aria-live="polite" data-live="oo-steps"></p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Try It Yourself</h2></div>
+      <div class="panelbody"><div class="qbox" data-set="oo"></div></div>
+    </div>
+    <div class="panel"><div class="panelbody plat"><button class="btn dark" type="button" data-view="home" data-group="home">&#9664; Back to all skills</button></div></div>
+  </section>
+
+  <!-- ==================== MEASURING: WHICH ONE ==================== -->
+  <section id="v-ms-which" class="hidden">
+    <div class="hero t-lav chamfer">
+      <h1 class="wordmark">WHICH ONE<br>DO I NEED?</h1>
+      <p class="tag">Perimeter, area and volume all measure a shape. They just measure different things. Start here.</p>
+    </div>
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Pick Your Skill</h2></div>
+      <div class="panelbody"><div class="carts">
+        <button class="cart" type="button" data-view="ms-p" data-group="ms">
+          <span class="kicker">Skill 04a</span><span class="nm">PERIMETER</span><span class="ds">The distance all the way around the outside.</span></button>
+        <button class="cart" type="button" data-view="ms-a" data-group="ms">
+          <span class="kicker">Skill 04b</span><span class="nm">AREA</span><span class="ds">The flat space inside a shape.</span></button>
+        <button class="cart" type="button" data-view="ms-v" data-group="ms">
+          <span class="kicker">Skill 04c</span><span class="nm">VOLUME</span><span class="ds">The space inside a box or container.</span></button>
+      </div></div>
+    </div>
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Tell Them Apart</h2></div>
+      <div class="panelbody">
+        <p class="lead">Think about the job you are doing. That tells you which one you need.</p>
+        <h3>You need PERIMETER when you go around the edge</h3>
+        <p>Putting a fence around a yard. Buying trim for the bottom of a wall. Framing a picture. You only care about the outside line.</p>
+        <h3>You need AREA when you cover a flat surface</h3>
+        <p>Buying carpet for a floor. Painting a wall. Laying tile. You care about the whole flat space inside.</p>
+        <h3>You need VOLUME when you fill something up</h3>
+        <p>Filling a box with packing peanuts. Filling a fish tank with water. Loading a moving truck. You care about the space inside a solid object.</p>
+        <div class="notice"><h4>Fast check</h4>
+          <p><strong>Around it?</strong> Perimeter. <strong>Cover it?</strong> Area. <strong>Fill it?</strong> Volume.</p></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Try It Yourself</h2></div>
+      <div class="panelbody"><div class="qbox" data-set="which"></div></div>
+    </div>
+    <div class="panel"><div class="panelbody plat"><button class="btn dark" type="button" data-view="home" data-group="home">&#9664; Back to all skills</button></div></div>
+  </section>
+
+  <!-- ==================== PERIMETER ==================== -->
+  <section id="v-ms-p" class="hidden">
+    <div class="hero t-ice chamfer">
+      <h1 class="wordmark">PERIMETER</h1>
+      <p class="tag">The distance all the way around the outside of a flat shape.</p>
+    </div>
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>What It Is</h2></div>
+      <div class="panelbody">
+        <p class="lead">Imagine walking around the edge of a room without ever cutting across the middle. How far did you walk? That is the perimeter.</p>
+        <figure>
+          <svg viewBox="0 0 320 190" role="img" aria-label="A rectangle 8 feet long and 5 feet wide. The outside edge is traced in orange to show the perimeter.">
+            <rect x="45" y="40" width="230" height="110" fill="#fff" stroke="#f68d1f" stroke-width="9"/>
+            <text x="160" y="30" text-anchor="middle" font-family="Arial" font-size="19" font-weight="bold" fill="#21242e">8 ft</text>
+            <text x="160" y="176" text-anchor="middle" font-family="Arial" font-size="19" font-weight="bold" fill="#21242e">8 ft</text>
+            <text x="28" y="100" text-anchor="middle" font-family="Arial" font-size="19" font-weight="bold" fill="#21242e">5 ft</text>
+            <text x="294" y="100" text-anchor="middle" font-family="Arial" font-size="19" font-weight="bold" fill="#21242e">5 ft</text>
+          </svg>
+          <figcaption>The orange line is the perimeter.</figcaption>
+        </figure>
+        <p>Every side counts, even the ones without a label. A rectangle has four sides, so you add four numbers.</p>
+        <p class="formula">P = add all the sides</p>
+        <p style="margin:0">Your answer is in plain <span class="units">units</span>, like feet or inches. Nothing gets squared.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Worked Example</h2></div>
+      <div class="panelbody">
+        <p>A room is <strong>8 feet</strong> long and <strong>5 feet</strong> wide. How much baseboard do you need to go all the way around?</p>
+        <ol class="steps" id="msp-steps" data-total="4">
+          <li data-step="1"><p>Write down the length of every side. A rectangle has two long sides and two short sides.</p>
+            <p class="formula">8 &nbsp; 5 &nbsp; 8 &nbsp; 5</p></li>
+          <li data-step="2" class="hidden"><p>Add the two long sides.</p><p class="formula">8 + 8 = 16</p></li>
+          <li data-step="3" class="hidden"><p>Add the two short sides.</p><p class="formula">5 + 5 = 10</p></li>
+          <li data-step="4" class="hidden"><p>Add those two answers together.</p>
+            <p class="formula">16 + 10 = 26 <span class="u">ft</span></p>
+            <p>You need <strong>26 feet</strong> of baseboard.</p></li>
+        </ol>
+        <div class="row">
+          <button class="btn" type="button" data-next="msp-steps"><span class="vh">Show next step</span><span aria-hidden="true">&#9654; Next Step</span></button>
+          <button class="btn dark" type="button" data-reset="msp-steps">Start Over</button>
+        </div>
+        <p class="vh" aria-live="polite" data-live="msp-steps"></p>
+        <div class="notice"><h4>Watch out for this</h4>
+          <p>A rectangle only gives you two labels, but it still has <strong>four</strong> sides. Do not add 8 + 5 and stop. That is the most common mistake on this skill.</p></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Try It Yourself</h2></div>
+      <div class="panelbody"><div class="qbox" data-set="perimeter"></div></div>
+    </div>
+    <div class="panel"><div class="panelbody plat"><button class="btn dark" type="button" data-view="ms-which" data-group="ms">&#9664; Back to measuring</button></div></div>
+  </section>
+
+  <!-- ==================== AREA ==================== -->
+  <section id="v-ms-a" class="hidden">
+    <div class="hero t-teal chamfer">
+      <h1 class="wordmark">AREA</h1>
+      <p class="tag">The amount of flat space inside a shape.</p>
+    </div>
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>What It Is</h2></div>
+      <div class="panelbody">
+        <p class="lead">Area is how many squares it takes to cover a shape completely, with no gaps and no overlaps.</p>
+        <figure>
+          <svg viewBox="0 0 320 190" role="img" aria-label="A rectangle 8 units long and 5 units wide, divided into a grid of 40 small squares.">
+            <rect x="45" y="35" width="232" height="116" fill="#c0d5e6" stroke="#21242e" stroke-width="4"/>
+            <g stroke="#3d4f97" stroke-width="1.5">
+              <line x1="74" y1="35" x2="74" y2="151"/><line x1="103" y1="35" x2="103" y2="151"/>
+              <line x1="132" y1="35" x2="132" y2="151"/><line x1="161" y1="35" x2="161" y2="151"/>
+              <line x1="190" y1="35" x2="190" y2="151"/><line x1="219" y1="35" x2="219" y2="151"/>
+              <line x1="248" y1="35" x2="248" y2="151"/>
+              <line x1="45" y1="58" x2="277" y2="58"/><line x1="45" y1="81" x2="277" y2="81"/>
+              <line x1="45" y1="104" x2="277" y2="104"/><line x1="45" y1="128" x2="277" y2="128"/>
+            </g>
+            <text x="161" y="26" text-anchor="middle" font-family="Arial" font-size="19" font-weight="bold" fill="#21242e">8 across</text>
+            <text x="161" y="176" text-anchor="middle" font-family="Arial" font-size="19" font-weight="bold" fill="#21242e">40 squares in all</text>
+            <text x="26" y="99" text-anchor="middle" font-family="Arial" font-size="19" font-weight="bold" fill="#21242e">5</text>
+          </svg>
+          <figcaption>5 rows of 8 squares each. You could count all 40, or you could just multiply.</figcaption>
+        </figure>
+        <p>Counting squares works, but multiplying is faster. Length times width gives the same answer.</p>
+        <p class="formula">A = length &times; width</p>
+        <p style="margin:0">You multiplied two measurements, so the answer is in <span class="units">square units</span>, written like ft&sup2; or in&sup2;.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Worked Example</h2></div>
+      <div class="panelbody">
+        <p>A room is <strong>8 feet</strong> long and <strong>5 feet</strong> wide. How much carpet do you need to cover the floor?</p>
+        <ol class="steps" id="msa-steps" data-total="4">
+          <li data-step="1"><p>Find the length and the width.</p><p class="formula">length = 8 &nbsp; width = 5</p></li>
+          <li data-step="2" class="hidden"><p>Put them into the formula.</p><p class="formula">A = 8 &times; 5</p></li>
+          <li data-step="3" class="hidden"><p>Multiply.</p><p class="formula">8 &times; 5 = 40</p></li>
+          <li data-step="4" class="hidden"><p>Add the units. You multiplied two measurements, so the answer is in square feet.</p>
+            <p class="formula">A = 40 <span class="u">ft&sup2;</span></p>
+            <p>You need <strong>40 square feet</strong> of carpet.</p></li>
+        </ol>
+        <div class="row">
+          <button class="btn" type="button" data-next="msa-steps"><span class="vh">Show next step</span><span aria-hidden="true">&#9654; Next Step</span></button>
+          <button class="btn dark" type="button" data-reset="msa-steps">Start Over</button>
+        </div>
+        <p class="vh" aria-live="polite" data-live="msa-steps"></p>
+        <div class="notice"><h4>Watch out for this</h4>
+          <p>Same room, two different answers. The perimeter is 26 ft and the area is 40 ft&sup2;. Read the question again and ask yourself: am I going <strong>around</strong> it or <strong>covering</strong> it?</p></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Try It Yourself</h2></div>
+      <div class="panelbody"><div class="qbox" data-set="area"></div></div>
+    </div>
+    <div class="panel"><div class="panelbody plat"><button class="btn dark" type="button" data-view="ms-which" data-group="ms">&#9664; Back to measuring</button></div></div>
+  </section>
+
+  <!-- ==================== VOLUME ==================== -->
+  <section id="v-ms-v" class="hidden">
+    <div class="hero t-red chamfer">
+      <h1 class="wordmark">VOLUME</h1>
+      <p class="tag">The amount of space inside a solid object, like a box.</p>
+    </div>
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>What It Is</h2></div>
+      <div class="panelbody">
+        <p class="lead">Volume is how many little cubes it takes to fill a box all the way up.</p>
+        <figure>
+          <svg viewBox="0 0 320 200" role="img" aria-label="A box drawn in 3D. It is 5 units long, 2 units wide and 3 units tall, filled with small cubes stacked in layers.">
+            <g stroke="#21242e" stroke-width="3" stroke-linejoin="round">
+              <polygon points="60,90 200,90 250,55 110,55" fill="#f0a95c"/>
+              <polygon points="60,90 200,90 200,160 60,160" fill="#c0d5e6"/>
+              <polygon points="200,90 250,55 250,125 200,160" fill="#8ba1d4"/>
+            </g>
+            <g stroke="#3d4f97" stroke-width="1.6">
+              <line x1="88" y1="90" x2="88" y2="160"/><line x1="116" y1="90" x2="116" y2="160"/>
+              <line x1="144" y1="90" x2="144" y2="160"/><line x1="172" y1="90" x2="172" y2="160"/>
+              <line x1="60" y1="113" x2="200" y2="113"/><line x1="60" y1="137" x2="200" y2="137"/>
+              <line x1="225" y1="72" x2="225" y2="142"/>
+              <line x1="200" y1="113" x2="250" y2="78"/><line x1="200" y1="137" x2="250" y2="102"/>
+            </g>
+            <text x="130" y="182" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold" fill="#21242e">length 5</text>
+            <text x="40" y="130" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold" fill="#21242e">3</text>
+            <text x="272" y="48" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold" fill="#21242e">2</text>
+          </svg>
+          <figcaption>Fill the bottom layer first, then stack more layers on top.</figcaption>
+        </figure>
+        <p>Fill the bottom of the box: 5 across by 2 back is 10 cubes. That is one layer. Now stack 3 layers. 10 cubes times 3 layers is 30 cubes.</p>
+        <p>Multiplying all three measurements at once does the same thing faster.</p>
+        <p class="formula">V = length &times; width &times; height</p>
+        <p style="margin:0">You multiplied three measurements, so the answer is in <span class="units">cubic units</span>, written like in&sup3; or ft&sup3;.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Worked Example</h2></div>
+      <div class="panelbody">
+        <p>This is the same box you just saw. It is <strong>5 inches</strong> long, <strong>2 inches</strong> wide and <strong>3 inches</strong> tall. How much space is inside it?</p>
+        <ol class="steps" id="msv-steps" data-total="4">
+          <li data-step="1"><p>Write down all three measurements.</p><p class="formula">l = 5 &nbsp; w = 2 &nbsp; h = 3</p></li>
+          <li data-step="2" class="hidden"><p>Multiply the first two. This fills the bottom layer.</p><p class="formula">5 &times; 2 = 10</p></li>
+          <li data-step="3" class="hidden"><p>Multiply that by the height. This stacks the layers.</p><p class="formula">10 &times; 3 = 30</p></li>
+          <li data-step="4" class="hidden"><p>Add the units. Three measurements multiplied means cubic inches.</p>
+            <p class="formula">V = 30 <span class="u">in&sup3;</span></p>
+            <p>The box holds <strong>30 cubic inches</strong>.</p></li>
+        </ol>
+        <div class="row">
+          <button class="btn" type="button" data-next="msv-steps"><span class="vh">Show next step</span><span aria-hidden="true">&#9654; Next Step</span></button>
+          <button class="btn dark" type="button" data-reset="msv-steps">Start Over</button>
+        </div>
+        <p class="vh" aria-live="polite" data-live="msv-steps"></p>
+        <div class="notice"><h4>Watch out for this</h4>
+          <p>The order does not matter. 5 &times; 2 &times; 3 and 3 &times; 5 &times; 2 both give 30. Multiply them in whatever order is easiest for you.</p></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panelhead"><span class="glyph" aria-hidden="true"></span><h2>Try It Yourself</h2></div>
+      <div class="panelbody"><div class="qbox" data-set="volume"></div></div>
+    </div>
+    <div class="panel"><div class="panelbody plat"><button class="btn dark" type="button" data-view="ms-which" data-group="ms">&#9664; Back to measuring</button></div></div>
+  </section>
+
+  </main>
+
+  <footer class="foot carbon chamfer">
+    <p>ALC Resources &middot; Adult Learning Center math reference</p>
+    <p>Works offline. Nothing you type is saved or sent anywhere.</p>
+    <span class="esrb">Accessible &mdash; WCAG AA</span>
+  </footer>
+</div>
+
+<script>
+/* ---------------- views ---------------- */
+var VIEWS=['home','pv','fr','oo','ms-which','ms-p','ms-a','ms-v'];
+var CRUMB={home:'ALC Resources &middot; Math Reference',pv:'Skill 01 &middot; Place Value',
+  fr:'Skill 02 &middot; Dividing Fractions',oo:'Skill 03 &middot; Order of Operations',
+  'ms-which':'Skill 04 &middot; Measuring','ms-p':'Skill 04 &middot; Measuring',
+  'ms-a':'Skill 04 &middot; Measuring','ms-v':'Skill 04 &middot; Measuring'};
+function show(name,group){
+  VIEWS.forEach(function(v){document.getElementById('v-'+v).classList.toggle('hidden',v!==name);});
+  document.querySelectorAll('.navlinks button').forEach(function(b){
+    b.setAttribute('aria-current',String(b.getAttribute('data-group')===group));
+  });
+  var isMs=group==='ms';
+  document.getElementById('subtabs').hidden=!isMs;
+  document.getElementById('crumbsep').hidden=!isMs;
+  document.getElementById('crumb').innerHTML=CRUMB[name]||CRUMB.home;
+  document.querySelectorAll('#subtabs button').forEach(function(b){
+    b.setAttribute('aria-current',String(b.getAttribute('data-view')===name));
+  });
+  window.scrollTo(0,0);
+  document.getElementById('main').focus();
+}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-view]'); if(!b)return;
+  show(b.getAttribute('data-view'),b.getAttribute('data-group'));
+});
+
+/* ---------------- step walkthroughs ---------------- */
+document.addEventListener('click',function(e){
+  var n=e.target.closest('[data-next]');
+  if(n){
+    var id=n.getAttribute('data-next'),ol=document.getElementById(id),total=+ol.getAttribute('data-total');
+    var shown=ol.querySelectorAll('[data-step]:not(.hidden)').length;
+    if(shown>=total)return;
+    var li=ol.querySelector('[data-step="'+(shown+1)+'"]');
+    li.classList.remove('hidden');
+    document.querySelector('[data-live="'+id+'"]').textContent='Step '+(shown+1)+' of '+total+'. '+li.textContent.replace(/\s+/g,' ').trim();
+    if(shown+1>=total){n.disabled=true;n.innerHTML='<span aria-hidden="true">That Is The Last Step</span><span class="vh">That is the last step</span>';}
+    return;
+  }
+  var r=e.target.closest('[data-reset]');
+  if(r){
+    var id2=r.getAttribute('data-reset'),ol2=document.getElementById(id2);
+    ol2.querySelectorAll('[data-step]').forEach(function(li){if(li.getAttribute('data-step')!=='1')li.classList.add('hidden');});
+    var nb=document.querySelector('[data-next="'+id2+'"]');
+    nb.disabled=false;nb.innerHTML='<span class="vh">Show next step</span><span aria-hidden="true">&#9654; Next Step</span>';
+    document.querySelector('[data-live="'+id2+'"]').textContent='Back to step 1.';
+  }
+});
+
+/* ---------------- practice ---------------- */
+var SETS={
+ pv:[
+  {type:'text',q:'In <strong>8,472</strong>, what is the 4 worth?',ok:['400','four hundred'],
+   hint:'Close. The 4 sits in the hundreds column. There are two digits to its right, so write 4 then two zeros.'},
+  {type:'text',q:'In <strong>56,109</strong>, what is the 5 worth?',ok:['50000','50,000','fifty thousand'],
+   hint:'Not yet. Count the columns to the right of the 5. There are four of them, so write 5 then four zeros.'},
+  {type:'choice',q:'In <strong>92,346</strong>, which digit is in the thousands place?',opts:['9','2','3','4'],ok:'2',
+   hint:'Try again. Start at the right and count left: 6 is ones, 4 is tens, 3 is hundreds. What comes next?'}
+ ],
+ fr:[
+  {type:'text',q:'<span class="eqn inline"><span class="frac"><span class="n">1</span><span class="d">2</span></span> &divide; <span class="frac"><span class="n">1</span><span class="d">4</span></span></span><span class="vh">One half divided by one quarter</span>',
+   ok:['2','2/1'],hint:'Not yet. Keep 1/2, change to times, flip 1/4 into 4/1. Now multiply: 1 times 4 on top, 2 times 1 on the bottom.'},
+  {type:'text',q:'<span class="eqn inline"><span class="frac"><span class="n">2</span><span class="d">3</span></span> &divide; <span class="frac"><span class="n">3</span><span class="d">5</span></span></span><span class="vh">Two thirds divided by three fifths</span>',
+   ok:['10/9','1 1/9'],hint:'Try again. Flip 3/5 into 5/3, then multiply: 2 times 5 is 10 on top, 3 times 3 is 9 on the bottom.'},
+  {type:'text',q:'<span class="eqn inline">5 &divide; <span class="frac"><span class="n">1</span><span class="d">2</span></span></span><span class="vh">Five divided by one half</span>',
+   ok:['10','10/1'],hint:'Not quite. Write 5 as 5/1 first. Then flip 1/2 into 2/1 and multiply across.'},
+  {type:'choice',q:'Which fraction do you flip?',opts:['The first one','The second one','Both of them'],ok:'The second one',
+   hint:'Not this one. Keep the first fraction exactly as it is. Only the second one flips.'}
+ ],
+ oo:[
+  {type:'text',q:'<span class="formula" style="font-size:1.1rem;padding:.35rem .6rem;margin:0">5 + 3 &times; 2</span>',ok:['11'],
+   hint:'Not yet. Multiply before you add. Do 3 times 2 first, then add the 5.'},
+  {type:'text',q:'<span class="formula" style="font-size:1.1rem;padding:.35rem .6rem;margin:0">20 &minus; 12 &divide; 4</span>',ok:['17'],
+   hint:'Try again. Divide before you subtract. Do 12 divided by 4 first, then take that away from 20.'},
+  {type:'text',q:'<span class="formula" style="font-size:1.1rem;padding:.35rem .6rem;margin:0">(6 + 2) &times; 3&sup2;</span>',ok:['72'],
+   hint:'Not quite. Parentheses first: 6 plus 2 is 8. Then the exponent: 3 squared is 9. Then multiply 8 times 9.'},
+  {type:'text',q:'<span class="formula" style="font-size:1.1rem;padding:.35rem .6rem;margin:0">24 &divide; 6 &times; 2</span>',ok:['8'],
+   hint:'Careful, this is the tricky one. Go left to right. Divide 24 by 6 first, then multiply by 2. Do not do 6 times 2 first.'}
+ ],
+ which:[
+  {type:'choice',q:'You want to put a fence around your garden. What do you need to work out?',
+   opts:['Perimeter','Area','Volume'],ok:'Perimeter',hint:'Not this one. A fence goes around the outside edge, so you need perimeter.'},
+  {type:'choice',q:'You want to buy carpet for a bedroom floor. What do you need?',
+   opts:['Perimeter','Area','Volume'],ok:'Area',hint:'Not this one. Carpet covers the flat floor, so you need area.'},
+  {type:'choice',q:'You want to know how much water fills a fish tank. What do you need?',
+   opts:['Perimeter','Area','Volume'],ok:'Volume',hint:'Not this one. Water fills the inside of a solid container, so you need volume.'}
+ ],
+ perimeter:[
+  {type:'text',q:'A rectangle is 12 ft long and 7 ft wide. What is the perimeter?',ok:['38','38ft','38 feet'],unit:'ft',
+   hint:'Not yet. Remember there are four sides: 12, 7, 12 and 7. Add all four.'},
+  {type:'text',q:'A square has four sides that are each 9 inches. What is the perimeter?',ok:['36','36in','36 inches'],unit:'in',
+   hint:'Try again. A square has four equal sides, so add 9 four times, or do 9 times 4.'},
+  {type:'choice',q:'Perimeter answers are measured in which kind of units?',opts:['Plain units','Square units','Cubic units'],ok:'Plain units',
+   hint:'Not quite. You only added measurements, you never multiplied them, so the units stay plain.'}
+ ],
+ area:[
+  {type:'text',q:'A rectangle is 9 in long and 6 in wide. What is the area?',ok:['54','54in2','54 sq in'],unit:'in&sup2;',
+   hint:'Not yet. Area is length times width. Try 9 times 6.'},
+  {type:'text',q:'A wall is 10 ft long and 8 ft tall. How many square feet of paint will cover it?',ok:['80','80ft2','80 sq ft'],unit:'ft&sup2;',
+   hint:'Try again. Painting covers a flat surface, so multiply: 10 times 8.'},
+  {type:'choice',q:'Area answers are measured in which kind of units?',opts:['Plain units','Square units','Cubic units'],ok:'Square units',
+   hint:'Not quite. You multiplied two measurements together, so the answer is in square units.'}
+ ],
+ volume:[
+  {type:'text',q:'A box is 5 in long, 4 in wide and 3 in tall. What is the volume?',ok:['60','60in3','60 cubic inches'],unit:'in&sup3;',
+   hint:'Not yet. Multiply all three: 5 times 4 is 20, then 20 times 3.'},
+  {type:'text',q:'A crate is 2 ft long, 2 ft wide and 6 ft tall. What is the volume?',ok:['24','24ft3','24 cubic feet'],unit:'ft&sup3;',
+   hint:'Try again. 2 times 2 is 4, which fills one layer. Then multiply by the height of 6.'},
+  {type:'choice',q:'Volume answers are measured in which kind of units?',opts:['Plain units','Square units','Cubic units'],ok:'Cubic units',
+   hint:'Not quite. You multiplied three measurements together, so the answer is in cubic units.'}
+ ]
+};
+function base(s){return String(s).toLowerCase().replace(/[,.$'"]/g,'').replace(/²/g,'2').replace(/³/g,'3').replace(/\s*\/\s*/g,'/');}
+function spaced(s){return base(s).replace(/\s+/g,' ').trim();}
+function tight(s){return base(s).replace(/\s+/g,'');}
+function matches(user,accepted){
+  return accepted.some(function(a){return spaced(a)===spaced(user)||tight(a)===tight(user);});
+}
+document.querySelectorAll('.qbox').forEach(function(box){
+  var key=box.getAttribute('data-set'),set=SETS[key];
+  set.forEach(function(item,i){
+    var d=document.createElement('div');d.className='q';
+    var h='<h4>Question '+(i+1)+'</h4><p>'+item.q+'</p>';
+    if(item.type==='text'){
+      h+='<div class="row" style="margin-top:.35rem"><label class="vh" for="'+key+i+'">Your answer for question '+(i+1)+'</label>'+
+         '<input id="'+key+i+'" type="text" autocomplete="off" aria-describedby="fb'+key+i+'">'+
+         (item.unit?'<span class="units">'+item.unit+'</span>':'')+
+         '<button class="btn" type="button" data-check="'+key+'" data-i="'+i+'">Check</button></div>';
+    }else{
+      h+='<div class="choices" role="group" aria-label="Answer choices for question '+(i+1)+'">'+
+         item.opts.map(function(o){return '<button type="button" data-pick="'+key+'" data-i="'+i+'" data-val="'+o+'">'+o+'</button>';}).join('')+'</div>';
+    }
+    h+='<p class="fb hidden" id="fb'+key+i+'" role="status" aria-live="polite"></p>';
+    d.innerHTML=h;box.appendChild(d);
+  });
+});
+function judge(key,i,val){
+  var item=SETS[key][i],fb=document.getElementById('fb'+key+i);
+  fb.classList.remove('hidden','ok','no');
+  if(!String(val).trim()){fb.classList.add('fb','no');fb.textContent='Type an answer first, then press Check.';return;}
+  var right=matches(val,item.type==='choice'?[item.ok]:item.ok);
+  fb.classList.add('fb',right?'ok':'no');
+  fb.textContent=right?'Correct. Nice work.':item.hint;
+}
+document.addEventListener('click',function(e){
+  var c=e.target.closest('[data-check]');
+  if(c){judge(c.getAttribute('data-check'),+c.getAttribute('data-i'),document.getElementById(c.getAttribute('data-check')+c.getAttribute('data-i')).value);return;}
+  var p=e.target.closest('[data-pick]');
+  if(p){judge(p.getAttribute('data-pick'),+p.getAttribute('data-i'),p.getAttribute('data-val'));}
+});
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter')return;
+  var inp=e.target.closest('.q input'); if(!inp)return;
+  e.preventDefault();
+  var btn=inp.parentNode.querySelector('[data-check]'); if(btn)btn.click();
+});
+</script>
+</body>
+</html>

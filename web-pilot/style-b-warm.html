@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ALC Math Help — Dividing Fractions</title>
+<style>
+  :root{
+    --ink:#2b2118;
+    --ink-soft:#5c4b3c;
+    --paper:#fdf8f2;
+    --card:#ffffff;
+    --line:#e9dccc;
+    --plum:#6b3f7a;
+    --plum-soft:#f3ebf6;
+    --teal:#1d6b63;
+    --teal-soft:#e4f2f0;
+    --amber:#8a5a00;
+    --amber-soft:#fdf2dc;
+    --focus:#0b4f8a;
+    --good:#155e46;
+    --good-bg:#e3f3ec;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Avenir Next","Nunito",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:19px;line-height:1.7;
+  }
+  .wrap{max-width:44rem;margin:0 auto;padding:0 1.25rem 5rem}
+  .skip{position:absolute;left:-9999px;background:var(--plum);color:#fff;padding:.75rem 1rem;z-index:99;border-radius:0 0 10px 0}
+  .skip:focus{left:0}
+  :focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:8px}
+
+  header.site{background:var(--plum);color:#fff}
+  header.site .wrap{padding:1.6rem 1.25rem}
+  .brand{margin:0;font-size:1.25rem;font-weight:700;letter-spacing:.01em}
+  .tagline{margin:.2rem 0 0;opacity:.92;font-size:1.02rem}
+
+  h1{font-size:2.15rem;line-height:1.25;margin:2.25rem 0 .5rem;font-weight:700;color:var(--plum)}
+  h2{font-size:1.4rem;margin:0 0 .8rem;font-weight:700}
+  h3{font-size:1.1rem;margin:0 0 .4rem;font-weight:700}
+  p{margin:0 0 1rem;max-width:62ch}
+  .lede{font-size:1.15rem;color:var(--ink-soft);max-width:60ch;margin-bottom:2rem}
+
+  .card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:1.75rem;margin:0 0 1.5rem;
+        box-shadow:0 2px 0 rgba(107,63,122,.06)}
+  .card > :last-child{margin-bottom:0}
+  .card.plum{border-color:#dcc7e4;background:var(--plum-soft)}
+  .card.teal{border-color:#bfdfda;background:var(--teal-soft)}
+  .card.amber{border-color:#eed7a8;background:var(--amber-soft)}
+  .card.amber h3{color:var(--amber)}
+
+  ul.topics{list-style:none;margin:0;padding:0;display:grid;gap:.85rem}
+  ul.topics button{
+    width:100%;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:18px;
+    padding:1.15rem 1.35rem;font:inherit;font-weight:600;color:var(--ink);cursor:pointer;min-height:44px;
+    display:flex;justify-content:space-between;align-items:center;gap:1rem;
+  }
+  ul.topics button:hover{border-color:var(--plum);background:var(--plum-soft);color:var(--plum)}
+  ul.topics li.soon{
+    border:2px dashed var(--line);border-radius:18px;padding:1.15rem 1.35rem;color:var(--ink-soft);
+    display:flex;justify-content:space-between;align-items:center;gap:1rem;
+  }
+  .num{opacity:.6;font-variant-numeric:tabular-nums;font-size:.95rem;margin-right:.35rem}
+  .tag{font-size:.85rem;border-radius:99px;padding:.2rem .7rem;flex:none;background:var(--teal-soft);color:var(--teal);font-weight:700}
+  li.soon .tag{background:transparent;border:1px solid var(--line);color:var(--ink-soft);font-weight:500}
+
+  .btn{font:inherit;font-weight:700;background:var(--plum);color:#fff;border:2px solid var(--plum);
+       border-radius:99px;padding:.7rem 1.35rem;cursor:pointer;min-height:44px}
+  .btn:hover{background:#57315f;border-color:#57315f}
+  .btn.ghost{background:#fff;color:var(--plum)}
+  .btn.ghost:hover{background:var(--plum-soft)}
+  .btn[disabled]{opacity:.45;cursor:default}
+  .btn.small{font-size:.95rem;padding:.5rem 1.05rem}
+  .row{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center}
+
+  /* fraction display */
+  .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .3rem;line-height:1.15}
+  .frac .n{padding:0 .35rem}
+  .frac .d{padding:0 .35rem;border-top:2.5px solid currentColor}
+  .eq{font-size:1.6rem;display:flex;align-items:center;flex-wrap:wrap;gap:.45rem;font-weight:600;
+      background:#fff;border:2px solid var(--line);border-radius:16px;padding:1rem 1.25rem;margin:.5rem 0 1rem}
+  .eq .op{opacity:.75}
+  .hl{color:var(--plum)}
+
+  ol.steps{margin:0;padding:0;list-style:none;counter-reset:s}
+  ol.steps li{counter-increment:s;position:relative;padding:1rem 0 1rem 3.4rem}
+  ol.steps li + li{border-top:2px solid var(--line)}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:1rem;width:2.4rem;height:2.4rem;
+    border-radius:50%;background:var(--plum);color:#fff;font-weight:800;display:grid;place-items:center;font-size:1.05rem}
+  ol.steps li:first-child{padding-top:.25rem}
+  ol.steps li:first-child::before{top:.25rem}
+  ol.steps li p{margin:0}
+  .hidden{display:none}
+
+  .q + .q{border-top:2px solid var(--line);margin-top:1.5rem;padding-top:1.5rem}
+  .q input{font:inherit;font-size:1.15rem;padding:.65rem .85rem;border:2px solid var(--line);border-radius:12px;
+    width:11rem;min-height:44px;background:#fff;color:var(--ink)}
+  .q input:focus-visible{border-color:var(--focus)}
+  .fb{margin-top:.9rem;padding:.9rem 1.1rem;border-radius:14px;font-weight:600}
+  .fb.ok{background:var(--good-bg);color:var(--good)}
+  .fb.no{background:var(--amber-soft);color:var(--amber)}
+
+  .speak{font:inherit;font-size:.95rem;background:#fff;border:2px solid var(--line);border-radius:99px;
+    padding:.35rem .95rem;cursor:pointer;color:var(--ink-soft);min-height:38px;font-weight:600}
+  .speak:hover{border-color:var(--plum);color:var(--plum)}
+  .speak[aria-pressed="true"]{background:var(--plum);color:#fff;border-color:var(--plum)}
+  .cardhead{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}
+
+  footer{border-top:2px solid var(--line);margin-top:3rem;padding-top:1.5rem;color:var(--ink-soft);font-size:.95rem}
+  .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+  @media (max-width:480px){body{font-size:18px}h1{font-size:1.75rem}.card{padding:1.25rem}.eq{font-size:1.35rem}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="site">
+  <div class="wrap">
+    <p class="brand">ALC Math Help</p>
+    <p class="tagline">Forgot how to do something? Look it up here.</p>
+  </div>
+</header>
+
+<main id="main" class="wrap" tabindex="-1">
+
+  <section id="home">
+    <h1>What do you need help with?</h1>
+    <p class="lede">Pick a skill below. You will get the steps one at a time, an example to follow, and a few problems to try.</p>
+    <ul class="topics">
+      <li class="soon"><span><span class="num">1.</span> Place Value</span> <span class="tag">Coming soon</span></li>
+      <li class="soon"><span><span class="num">2.</span> Adding and Subtracting</span> <span class="tag">Coming soon</span></li>
+      <li class="soon"><span><span class="num">3.</span> Multiplication</span> <span class="tag">Coming soon</span></li>
+      <li class="soon"><span><span class="num">4.</span> Division</span> <span class="tag">Coming soon</span></li>
+      <li class="soon"><span><span class="num">5.</span> Improper Fractions and Mixed Numbers</span> <span class="tag">Coming soon</span></li>
+      <li><button type="button" onclick="go()"><span><span class="num">6.</span> Dividing Fractions</span> <span class="tag">Ready</span></button></li>
+      <li class="soon"><span><span class="num">7.</span> Decimals</span> <span class="tag">Coming soon</span></li>
+      <li class="soon"><span><span class="num">8.</span> Integers</span> <span class="tag">Coming soon</span></li>
+    </ul>
+  </section>
+
+  <section id="lesson" class="hidden">
+    <p style="margin:1.75rem 0 0"><button class="btn ghost small" type="button" onclick="home()">&larr; All skills</button></p>
+    <h1>Dividing Fractions</h1>
+    <p class="lede">There is a trick for this one. You never really divide. You flip the second fraction and multiply instead.</p>
+
+    <div class="card plum">
+      <div class="cardhead">
+        <h2>What dividing fractions means</h2>
+        <button class="speak" type="button" aria-pressed="false" data-read="mean">Read aloud</button>
+      </div>
+      <div id="mean">
+        <p style="margin-bottom:.75rem">When you see <span class="eq" style="display:inline-flex;font-size:1.2rem;padding:.35rem .7rem;margin:0"><span class="frac"><span class="n">1</span><span class="d">2</span></span><span class="op">&divide;</span><span class="frac"><span class="n">1</span><span class="d">4</span></span></span> you are asking:</p>
+        <p style="margin:0"><strong>How many quarters fit inside one half?</strong> The answer is 2. Half a pizza holds two quarter slices.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardhead">
+        <h2>First, learn the flip</h2>
+        <button class="speak" type="button" aria-pressed="false" data-read="flip">Read aloud</button>
+      </div>
+      <div id="flip">
+        <p>To flip a fraction, swap the top number and the bottom number. The flipped fraction is called the <strong>reciprocal</strong>.</p>
+        <p class="eq"><span class="frac"><span class="n">2</span><span class="d">9</span></span><span class="op">flips to</span><span class="frac hl"><span class="n">9</span><span class="d">2</span></span></p>
+        <p>A whole number flips too. Just put a 1 under it first.</p>
+        <p class="eq">7 <span class="op">=</span> <span class="frac"><span class="n">7</span><span class="d">1</span></span> <span class="op">flips to</span> <span class="frac hl"><span class="n">1</span><span class="d">7</span></span></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardhead">
+        <h2>The steps</h2>
+        <button class="speak" type="button" aria-pressed="false" data-read="steps">Read aloud</button>
+      </div>
+      <p>Follow along with this problem: <span class="eq" style="display:inline-flex;font-size:1.2rem;padding:.35rem .7rem;margin:0"><span class="frac"><span class="n">3</span><span class="d">4</span></span><span class="op">&divide;</span><span class="frac"><span class="n">2</span><span class="d">3</span></span></span></p>
+      <ol class="steps" id="steps">
+        <li data-step="1"><p><strong>Keep</strong> the first fraction exactly as it is.</p>
+          <p class="eq"><span class="frac hl"><span class="n">3</span><span class="d">4</span></span><span class="op">&divide;</span><span class="frac"><span class="n">2</span><span class="d">3</span></span></p></li>
+        <li data-step="2" class="hidden"><p><strong>Change</strong> the divide sign to a multiply sign.</p>
+          <p class="eq"><span class="frac"><span class="n">3</span><span class="d">4</span></span><span class="op hl">&times;</span><span class="frac"><span class="n">2</span><span class="d">3</span></span></p></li>
+        <li data-step="3" class="hidden"><p><strong>Flip</strong> the second fraction. Only the second one.</p>
+          <p class="eq"><span class="frac"><span class="n">3</span><span class="d">4</span></span><span class="op">&times;</span><span class="frac hl"><span class="n">3</span><span class="d">2</span></span></p></li>
+        <li data-step="4" class="hidden"><p><strong>Multiply</strong> straight across. Tops together, then bottoms together.</p>
+          <p class="eq">3 &times; 3 = 9 &nbsp;&nbsp; 4 &times; 2 = 8</p>
+          <p class="eq"><span class="frac hl"><span class="n">9</span><span class="d">8</span></span></p></li>
+        <li data-step="5" class="hidden"><p><strong>Tidy up.</strong> The top is bigger than the bottom, so write it as a mixed number.</p>
+          <p class="eq"><span class="frac"><span class="n">9</span><span class="d">8</span></span><span class="op">=</span>1<span class="frac"><span class="n">1</span><span class="d">8</span></span></p></li>
+      </ol>
+      <div class="row" style="margin-top:1.25rem">
+        <button class="btn" type="button" id="next">Show next step</button>
+        <button class="btn ghost" type="button" id="reset">Start over</button>
+      </div>
+      <p aria-live="polite" class="visually-hidden" id="live">Step 1 of 5 showing.</p>
+    </div>
+
+    <div class="card amber">
+      <h3>Watch out for this</h3>
+      <p style="margin:0">Only the <strong>second</strong> fraction gets flipped. Learners often flip the first one by mistake. Say it out loud as you work: <em>keep, change, flip.</em></p>
+    </div>
+
+    <div class="card">
+      <div class="cardhead">
+        <h2>Try it yourself</h2>
+        <button class="speak" type="button" aria-pressed="false" data-read="qs">Read aloud</button>
+      </div>
+      <p>Type fractions like this: <strong>9/8</strong>. Mixed numbers like this: <strong>1 1/8</strong>. Either form is fine.</p>
+      <div id="qs"></div>
+    </div>
+
+    <p><button class="btn ghost" type="button" onclick="home()">&larr; Back to all skills</button></p>
+  </section>
+
+  <footer><p>ALC Resources &middot; Adult Learning Center math reference</p></footer>
+</main>
+
+<script>
+function go(){document.getElementById('home').classList.add('hidden');document.getElementById('lesson').classList.remove('hidden');window.scrollTo(0,0);}
+function home(){stopSpeech();document.getElementById('lesson').classList.add('hidden');document.getElementById('home').classList.remove('hidden');window.scrollTo(0,0);}
+
+var shown=1,total=5,stepsEl=document.getElementById('steps'),live=document.getElementById('live');
+document.getElementById('next').addEventListener('click',function(){
+  if(shown>=total)return;
+  shown++;
+  var li=stepsEl.querySelector('[data-step="'+shown+'"]');
+  li.classList.remove('hidden');
+  live.textContent='Step '+shown+' of '+total+'. '+li.textContent.replace(/\s+/g,' ').trim();
+  if(shown>=total){this.disabled=true;this.textContent='That is the last step';}
+});
+document.getElementById('reset').addEventListener('click',function(){
+  shown=1;
+  stepsEl.querySelectorAll('[data-step]').forEach(function(li){if(li.getAttribute('data-step')!=='1')li.classList.add('hidden');});
+  var n=document.getElementById('next');n.disabled=false;n.textContent='Show next step';
+  live.textContent='Back to step 1 of '+total+'.';
+});
+
+var questions=[
+ {q:'<span class="frac"><span class="n">1</span><span class="d">2</span></span> &divide; <span class="frac"><span class="n">1</span><span class="d">4</span></span>',
+  plain:'One half divided by one quarter',
+  ok:['2','2/1'],
+  hint:'Not yet. Keep 1/2, change to times, flip 1/4 into 4/1. Now multiply: 1 times 4 on top, 2 times 1 on the bottom.'},
+ {q:'<span class="frac"><span class="n">2</span><span class="d">3</span></span> &divide; <span class="frac"><span class="n">3</span><span class="d">5</span></span>',
+  plain:'Two thirds divided by three fifths',
+  ok:['10/9','1 1/9','11/9'],
+  hint:'Try again. Flip 3/5 into 5/3, then multiply: 2 times 5 is 10 on top, 3 times 3 is 9 on the bottom.'},
+ {q:'5 &divide; <span class="frac"><span class="n">1</span><span class="d">2</span></span>',
+  plain:'Five divided by one half',
+  ok:['10','10/1'],
+  hint:'Not quite. Write 5 as 5/1 first. Then flip 1/2 into 2/1 and multiply across.'}
+];
+var box=document.getElementById('qs');
+questions.forEach(function(item,i){
+  var d=document.createElement('div');
+  d.className='q';
+  d.innerHTML='<h3>Question '+(i+1)+'</h3>'+
+    '<p class="eq" style="font-size:1.35rem">'+item.q+'<span class="visually-hidden">'+item.plain+'</span></p>'+
+    '<div class="row"><label class="visually-hidden" for="a'+i+'">Your answer for question '+(i+1)+'</label>'+
+    '<input id="a'+i+'" type="text" autocomplete="off" aria-describedby="f'+i+'">'+
+    '<button class="btn small" type="button" data-i="'+i+'">Check</button></div>'+
+    '<p class="fb hidden" id="f'+i+'" role="status" aria-live="polite"></p>';
+  box.appendChild(d);
+});
+function norm(s){return String(s).toLowerCase().replace(/\s+/g,' ').replace(/\s*\/\s*/g,'/').trim();}
+box.addEventListener('click',function(e){
+  var b=e.target.closest('button[data-i]'); if(!b)return;
+  var i=+b.getAttribute('data-i'), val=norm(document.getElementById('a'+i).value), fb=document.getElementById('f'+i);
+  fb.classList.remove('hidden','ok','no');
+  if(!val){fb.classList.add('fb','no');fb.textContent='Type an answer first, then press Check.';return;}
+  var right=questions[i].ok.some(function(a){return norm(a)===val;});
+  fb.classList.add('fb',right?'ok':'no');
+  fb.textContent=right?'Correct. Nice work.':questions[i].hint;
+});
+
+/* give every stacked fraction a spoken label, e.g. "3 over 4" */
+function labelFractions(root){
+  (root||document).querySelectorAll('.frac').forEach(function(f){
+    if(f.hasAttribute('aria-label'))return;
+    var n=f.querySelector('.n'), d=f.querySelector('.d');
+    if(!n||!d)return;
+    f.setAttribute('role','img');
+    f.setAttribute('aria-label',n.textContent.trim()+' over '+d.textContent.trim());
+  });
+}
+labelFractions();
+
+/* spoken text: swap stacked fractions for their word form, skip hidden steps */
+function readableText(el){
+  var c=el.cloneNode(true);
+  c.querySelectorAll('.hidden,.visually-hidden').forEach(function(n){n.remove();});
+  c.querySelectorAll('.frac').forEach(function(f){
+    f.replaceWith(document.createTextNode(' '+(f.getAttribute('aria-label')||f.textContent)+' '));
+  });
+  return (c.textContent||'').replace(/\s+/g,' ').replace(/&divide;/g,' divided by ').trim();
+}
+
+var _s=window.speechSynthesis;
+function stopSpeech(){
+  if(_s)_s.cancel();
+  document.querySelectorAll('.speak[aria-pressed="true"]').forEach(function(b){b.setAttribute('aria-pressed','false');b.textContent='Read aloud';});
+}
+document.querySelectorAll('.speak').forEach(function(btn){
+  if(!_s){btn.remove();return;}
+  btn.addEventListener('click',function(){
+    var wasOn=btn.getAttribute('aria-pressed')==='true';
+    stopSpeech(); if(wasOn)return;
+    var src=document.getElementById(btn.getAttribute('data-read')); if(!src)return;
+    var u=new SpeechSynthesisUtterance(readableText(src));
+    u.rate=.85;
+    u.onend=function(){btn.setAttribute('aria-pressed','false');btn.textContent='Read aloud';};
+    btn.setAttribute('aria-pressed','true');btn.textContent='Stop reading';
+    _s.speak(u);
+  });
+});
+</script>
+</body>
+</html>
