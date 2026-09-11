@@ -32,10 +32,10 @@ const BINDER = [
     { id: "sub-facts", title: "Subtracting by Counting Up" },
     { id: "counting-81", title: "Everything Is Counting" },
     { id: "add-large",  title: "Adding Large Numbers" },
-    { id: "sub-large",  title: "Subtracting Large Numbers", soon: true },
+    { id: "sub-large",  title: "Subtracting Large Numbers" },
     { id: "times-table", title: "Making a Times Table" },
-    { id: "mult-2x2",   title: "Multiplying 2-Digit Numbers", soon: true },
-    { title: "Dividing Multi-Digit Numbers", soon: true },
+    { id: "mult-2x2",   title: "Multiplying 2-Digit Numbers" },
+    { id: "div-large",  title: "Dividing Multi-Digit Numbers" },
     { title: "Exponents", soon: true },
     { title: "Integers: Add, Subtract, Multiply, Divide", soon: true },
     { title: "Evaluating Expressions", soon: true },
@@ -1742,6 +1742,330 @@ LESSONS["area-perimeter"] = {
       show: { kind: "recap" },
       say: "Here is our recipe. Name the two sides, length and width. Area is the squares inside, length times width, in square units. Perimeter is the walk around the outside, add all the sides, in plain units.",
       cue: "Soil inside, fence around. If they remember that, they remember the lesson.",
+    },
+  ],
+};
+
+/* ============================================================
+   LESSON: Dividing Multi-Digit Numbers (standard long division)
+   Worked example 476 ÷ 7 = 68, then guided practice 738 ÷ 5,
+   which lands on a remainder and on a quotient whose first digit
+   comes from a single column.
+
+   The one hard moment in this algorithm is "how many 7s fit in
+   47?" — an estimate these students cannot pull from memory. So
+   every estimate beat sends them to the 7s chart from the Making
+   a Times Table lesson instead: find the biggest one that has not
+   gone past. That keeps the algorithm standard, the way the
+   binder and the tests have it, while giving the guess somewhere
+   to be looked up rather than recalled.
+   ============================================================ */
+
+/* the house never changes shape during the worked example, only what is
+   written in it, so both problems are named once here */
+const DIV_A = { kind: "divbox", divisor: "7", dividend: "476", context: "476 ÷ 7" };
+const DIV_B = { kind: "divbox", divisor: "5", dividend: "738", context: "You try: 738 ÷ 5" };
+
+LESSONS["div-large"] = {
+  id: "div-large",
+  title: "Dividing Multi-Digit Numbers",
+  beats: [
+
+    {
+      show: { kind: "title", kicker: "Operations", title: "Dividing Multi-Digit Numbers",
+              goal: "We will split a big number into equal groups, one digit at a time." },
+      say: "Today we divide. Dividing is just sharing. We take a pile of something and we split it into equal groups. The pile can be big. The sharing is still done in small pieces, one at a time.",
+      cue: "Division is the one that scares them most. Lead with sharing, not with the word division.",
+    },
+
+    {
+      show: { kind: "story", text: "There are 476 pencils. There are 7 tables. Every table gets the same number of pencils. How many does each table get?" },
+      say: "Here is our problem. Four hundred seventy six pencils. Seven tables. Every table gets the same amount. Nobody gets extra. How many pencils land on each table?",
+    },
+
+    {
+      ask: "Could you hand them out one pencil at a time?",
+      show: { kind: "story", text: "There are 476 pencils. There are 7 tables. Every table gets the same number of pencils. How many does each table get?" },
+      say: "You could do it by hand. One pencil here, one pencil there, all the way around, again and again. It would work. It would also take all afternoon. So we have a faster way.",
+      cue: "Let someone say it would take forever. That is the reason the method exists.",
+    },
+
+    {
+      show: { kind: "note", title: "The three words",
+              text: "The <b>dividend</b> is the pile we are splitting: 476.<br>The <b>divisor</b> is how many groups: 7.<br>The <b>quotient</b> is the answer: how many each group gets." },
+      say: "Three words. The dividend is the pile, four hundred seventy six. The divisor is how many groups, seven. The quotient is the answer. You do not have to remember the words to do the math. I will say pile, groups, and answer too.",
+      cue: "Say the plain words every time you say the fancy ones. They will pick the fancy ones up on their own.",
+    },
+
+    {
+      show: { kind: "note", title: "You already have the tool",
+              text: "The hardest part of dividing is asking <b>how many 7s fit?</b><br>You do not have to remember. You look it up on your 7s chart." },
+      say: "Here is the part people get stuck on. Dividing keeps asking you how many sevens fit inside a number. That sounds like something you have to remember. It is not. You built a times chart. You are going to use it. Looking it up is allowed. Looking it up is the method.",
+      cue: "If they have not done Making a Times Table, build the 7s chart with them before going on. This lesson leans on it four times.",
+    },
+
+    {
+      step: "Put the big number in the house.",
+      show: Object.assign({}, DIV_A),
+      say: "We start by writing it out. The pile goes inside the house. The number of groups goes outside on the left. The answer is going to grow on the roof, above the line.",
+      cue: "Draw the house on the board as you say it. Roof, wall, pile inside.",
+    },
+
+    {
+      ask: "Can 7 go into 4?",
+      show: Object.assign({}, DIV_A, { hl: [0] }),
+      say: "We always start on the left. The first digit is four. So the question is, can seven go into four? Can you make a group of seven out of four things?",
+      cue: "Let them answer. Most will say no, correctly. Some will say yes because 7 is 'bigger'. That is the confusion to catch.",
+    },
+
+    {
+      step: "Take just enough digits from the left.",
+      show: Object.assign({}, DIV_A, { hl: [0, 1],
+              note: { title: "Not enough", text: "4 is smaller than 7, so 4 on its own is no good. We take one more digit and look at <b>47</b>." } }),
+      say: "No. Four is smaller than seven. You cannot make a group of seven out of four. So we do not stop, we just take one more digit. Now we are looking at forty seven. Seven does go into forty seven.",
+    },
+
+    {
+      ask: "How many 7s fit inside 47?",
+      show: Object.assign({}, DIV_A, { hl: [0, 1] }),
+      say: "Now the real question. How many sevens fit inside forty seven? Not exactly forty seven. As close as we can get without going over.",
+      cue: "Do not let them guess in the dark. Next beat sends them to the chart.",
+    },
+
+    {
+      show: { kind: "charts", factors: [7], title: "Your 7s",
+              text: "Walk along the chart. Find the biggest 7 that has <b>not</b> gone past 47." },
+      say: "Go to your sevens. Seven, fourteen, twenty one, twenty eight, thirty five, forty two, forty nine. Stop. Forty nine is past forty seven. So we back up one. Forty two. And forty two is six sevens.",
+      cue: "The skill is stopping one before you go over. Say 'forty nine is too big, back up' out loud.",
+    },
+
+    {
+      step: "Ask how many fit. Write it on top.",
+      show: Object.assign({}, DIV_A, { quotient: " 6 ", hl: [0, 1] }),
+      say: "Six sevens fit. So a six goes on the roof. And it goes right above the seven, the last digit we used. Where you put it matters. Straight above.",
+      cue: "Placement is the number one error. If the 6 drifts left, the whole answer is wrong by a factor of ten.",
+    },
+
+    {
+      step: "Multiply. Write it underneath.",
+      show: Object.assign({}, DIV_A, { quotient: " 6 ",
+              rows: [{ t: "42 ", op: "−", rule: [0, 1] }] }),
+      say: "Now we write down what six sevens actually is. Forty two. It goes underneath the forty seven, lined up. That is how much we just handed out.",
+    },
+
+    {
+      step: "Subtract.",
+      show: Object.assign({}, DIV_A, { quotient: " 6 ",
+              rows: [{ t: "42 ", op: "−", rule: [0, 1] }, { t: " 5 " }] }),
+      say: "We had forty seven. We handed out forty two. Take it away. Five left. That five is what did not fit into the groups yet.",
+      cue: "Count up if they need to: 42 to 47 is five. Same move as the subtraction lesson.",
+    },
+
+    {
+      show: Object.assign({}, DIV_A, { quotient: " 6 ",
+              rows: [{ t: "42 ", op: "−", rule: [0, 1] }, { t: " 5 " }],
+              note: { title: "Check yourself", text: "The leftover must be <b>smaller</b> than the divisor. 5 is smaller than 7. Good." } }),
+      say: "Quick check, every single time. The leftover has to be smaller than the number of groups. Five is smaller than seven, so we are fine. If it was bigger, that would mean another group still fits and we picked too small a number up top.",
+      cue: "This check catches almost every long division mistake before it spreads. Make it a habit here.",
+    },
+
+    {
+      step: "Bring the next digit down. Go again.",
+      show: Object.assign({}, DIV_A, { quotient: " 6 ",
+              rows: [{ t: "42 ", op: "−", rule: [0, 1] }, { t: " 56", bring: 2 }] }),
+      say: "We are not done. There is still a six waiting inside the house. So we bring it down and park it next to the five. Now we have fifty six to share out.",
+      cue: "Point at the arrow. The digit does not change, it just moves down to join the leftover.",
+    },
+
+    {
+      ask: "How many 7s fit inside 56?",
+      show: Object.assign({}, DIV_A, { quotient: " 6 ",
+              rows: [{ t: "42 ", op: "−", rule: [0, 1] }, { t: " 56", bring: 2 }] }),
+      say: "Same question as before. How many sevens fit in fifty six? Use the chart again. It is allowed every time.",
+      cue: "Some will now remember 7 times 8. Great. The chart is still there for everyone else.",
+    },
+
+    {
+      ref: 3,
+      show: Object.assign({}, DIV_A, { quotient: " 68",
+              rows: [{ t: "42 ", op: "−", rule: [0, 1] }, { t: " 56", bring: 2 }] }),
+      say: "Eight. Eight sevens is exactly fifty six. So an eight goes on the roof, right above the six we brought down.",
+    },
+
+    {
+      ref: 4,
+      show: Object.assign({}, DIV_A, { quotient: " 68",
+              rows: [{ t: "42 ", op: "−", rule: [0, 1] }, { t: " 56", bring: 2 },
+                      { t: " 56", op: "−", rule: [1, 2] }] }),
+      say: "Write down what eight sevens is. Fifty six. Underneath, lined up.",
+    },
+
+    {
+      ref: 5,
+      show: Object.assign({}, DIV_A, { quotient: " 68",
+              rows: [{ t: "42 ", op: "−", rule: [0, 1] }, { t: " 56", bring: 2 },
+                      { t: " 56", op: "−", rule: [1, 2] }, { t: "  0", final: true }] }),
+      say: "Fifty six take away fifty six is zero. Nothing left over. And there are no more digits inside the house to bring down. That means we are finished.",
+      cue: "Two things must both be true to stop: nothing left over, nothing left to bring down.",
+    },
+
+    {
+      show: { kind: "answer", text: "476 ÷ 7 = 68. Every table gets 68 pencils. None are left over." },
+      say: "There is our answer. Sixty eight. Each of the seven tables gets sixty eight pencils, and the box is empty at the end.",
+    },
+
+    {
+      show: { kind: "columns", rows: [{ t: "68" }, { t: "7", op: "×" }],
+              result: "476", resultFinal: true, context: "Checking: 68 × 7" },
+      say: "And you can always check it. Multiply your answer by the number of groups. Sixty eight times seven should give you back the pile. Four hundred seventy six. It does. Dividing and multiplying undo each other.",
+      cue: "Good habit to teach, and it quietly reuses the multiplication lesson.",
+    },
+
+    /* ---- guided practice: 738 ÷ 5, with a remainder at the end ---- */
+
+    {
+      show: { kind: "story", text: "Now you try. There are 738 candies. There are 5 bags. How many candies go in each bag?" },
+      say: "Your turn now. Seven hundred thirty eight candies. Five bags. Same method, start to finish. I will ask, you answer, and then we check it together.",
+    },
+
+    {
+      ref: 1,
+      show: Object.assign({}, DIV_B),
+      say: "First, set it up. The pile goes in the house. The five goes outside.",
+    },
+
+    {
+      ref: 2,
+      ask: "Can 5 go into 7?",
+      show: Object.assign({}, DIV_B, { hl: [0] }),
+      say: "Start on the left. Seven. Can five go into seven?",
+      cue: "Yes this time, once, which is the difference from the first problem. Let them notice that themselves.",
+    },
+
+    {
+      ref: 3,
+      show: Object.assign({}, DIV_B, { quotient: "1  ", hl: [0] }),
+      say: "Yes. One five fits in seven. Two fives would be ten, and ten is past seven. So one. And the one goes on the roof right above the seven.",
+    },
+
+    {
+      ref: 4,
+      show: Object.assign({}, DIV_B, { quotient: "1  ",
+              rows: [{ t: "5  ", op: "−", rule: [0, 0] }] }),
+      say: "One five is five. Write it underneath the seven.",
+    },
+
+    {
+      ref: 5,
+      ask: "7 take away 5 is what?",
+      show: Object.assign({}, DIV_B, { quotient: "1  ",
+              rows: [{ t: "5  ", op: "−", rule: [0, 0] }, { t: "2  " }] }),
+      say: "Seven take away five. Two. And two is smaller than five, so our check passes.",
+    },
+
+    {
+      ref: 6,
+      show: Object.assign({}, DIV_B, { quotient: "1  ",
+              rows: [{ t: "5  ", op: "−", rule: [0, 0] }, { t: "23 ", bring: 1 }] }),
+      say: "Bring down the next digit. The three comes down next to the two. Now we are sharing twenty three.",
+    },
+
+    {
+      ask: "How many 5s fit inside 23?",
+      show: Object.assign({}, DIV_B, { quotient: "1  ",
+              rows: [{ t: "5  ", op: "−", rule: [0, 0] }, { t: "23 ", bring: 1 }] }),
+      say: "How many fives fit in twenty three? Count your fives. Five, ten, fifteen, twenty, twenty five. Where do you have to stop?",
+      cue: "Twenty five goes past. Back up to twenty, which is four fives.",
+    },
+
+    {
+      ref: 3,
+      show: Object.assign({}, DIV_B, { quotient: "14 ",
+              rows: [{ t: "5  ", op: "−", rule: [0, 0] }, { t: "23 ", bring: 1 }] }),
+      say: "Four. Four fives is twenty, and twenty five would be too big. So a four goes on the roof, above the three.",
+    },
+
+    {
+      ref: 4,
+      show: Object.assign({}, DIV_B, { quotient: "14 ",
+              rows: [{ t: "5  ", op: "−", rule: [0, 0] }, { t: "23 ", bring: 1 },
+                      { t: "20 ", op: "−", rule: [0, 1] }] }),
+      say: "Four fives is twenty. Write it underneath, lined up with the twenty three.",
+    },
+
+    {
+      ref: 5,
+      show: Object.assign({}, DIV_B, { quotient: "14 ",
+              rows: [{ t: "5  ", op: "−", rule: [0, 0] }, { t: "23 ", bring: 1 },
+                      { t: "20 ", op: "−", rule: [0, 1] }, { t: " 3 " }] }),
+      say: "Twenty three take away twenty. Three left. Three is smaller than five, so we are still good.",
+    },
+
+    {
+      ref: 6,
+      show: Object.assign({}, DIV_B, { quotient: "14 ",
+              rows: [{ t: "5  ", op: "−", rule: [0, 0] }, { t: "23 ", bring: 1 },
+                      { t: "20 ", op: "−", rule: [0, 1] }, { t: " 38", bring: 2 }] }),
+      say: "One digit left in the house. Bring the eight down. Now we are sharing thirty eight.",
+    },
+
+    {
+      ask: "How many 5s fit inside 38?",
+      show: Object.assign({}, DIV_B, { quotient: "14 ",
+              rows: [{ t: "5  ", op: "−", rule: [0, 0] }, { t: "23 ", bring: 1 },
+                      { t: "20 ", op: "−", rule: [0, 1] }, { t: " 38", bring: 2 }] }),
+      say: "Last one. How many fives fit in thirty eight? Count up your fives and stop before you go past.",
+      cue: "Thirty five, then forty is too big. Seven fives.",
+    },
+
+    {
+      ref: 3,
+      show: Object.assign({}, DIV_B, { quotient: "147",
+              rows: [{ t: "5  ", op: "−", rule: [0, 0] }, { t: "23 ", bring: 1 },
+                      { t: "20 ", op: "−", rule: [0, 1] }, { t: " 38", bring: 2 }] }),
+      say: "Seven. Seven fives is thirty five. Forty would be past. Seven goes on the roof above the eight.",
+    },
+
+    {
+      ref: 4,
+      show: Object.assign({}, DIV_B, { quotient: "147",
+              rows: [{ t: "5  ", op: "−", rule: [0, 0] }, { t: "23 ", bring: 1 },
+                      { t: "20 ", op: "−", rule: [0, 1] }, { t: " 38", bring: 2 },
+                      { t: " 35", op: "−", rule: [1, 2] }] }),
+      say: "Seven fives is thirty five. Write it underneath.",
+    },
+
+    {
+      ref: 5,
+      ask: "38 take away 35 is what?",
+      show: Object.assign({}, DIV_B, { quotient: "147",
+              rows: [{ t: "5  ", op: "−", rule: [0, 0] }, { t: "23 ", bring: 1 },
+                      { t: "20 ", op: "−", rule: [0, 1] }, { t: " 38", bring: 2 },
+                      { t: " 35", op: "−", rule: [1, 2] }, { t: "  3" }] }),
+      say: "Thirty eight take away thirty five. Three left over. And this time there are no more digits to bring down.",
+      cue: "Pause here. This is the new thing in this problem. Do not rush to the remainder.",
+    },
+
+    {
+      step: "When the digits run out, what is left is the remainder.",
+      show: Object.assign({}, DIV_B, { quotient: "147", remainder: "R 3",
+              rows: [{ t: "5  ", op: "−", rule: [0, 0] }, { t: "23 ", bring: 1 },
+                      { t: "20 ", op: "−", rule: [0, 1] }, { t: " 38", bring: 2 },
+                      { t: " 35", op: "−", rule: [1, 2] }, { t: "  3", final: true }],
+              note: { title: "Left over is allowed", text: "3 candies will not split evenly into 5 bags. They just do not go in a bag. We write <b>R 3</b>." } }),
+      say: "Three candies are left over. They cannot be split between five bags, not fairly. So they just stay out. We write R three next to the answer. R means remainder, which is a fancy word for left over.",
+      cue: "A remainder is not a mistake and not a failure. Say that. Some of them will assume they did it wrong.",
+    },
+
+    {
+      show: { kind: "answer", text: "738 ÷ 5 = 147 R 3. Each bag gets 147 candies, and 3 are left over." },
+      say: "There it is. One hundred forty seven candies in every bag, and three left on the table. That is a complete, correct answer.",
+    },
+
+    {
+      show: { kind: "recap" },
+      say: "Here is our recipe. Put it in the house. Take just enough digits. Ask how many fit, and look it up. Multiply. Subtract. Bring the next one down and go again. When you run out of digits, whatever is left is the remainder. Same seven steps, every problem, no matter how big the pile.",
+      cue: "Leave this up. The looking-it-up step is the one worth repeating as they copy it down.",
     },
   ],
 };

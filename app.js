@@ -21,7 +21,7 @@ function renderHome() {
     const grid = document.createElement("div");
     grid.className = "cards";
     for (const t of u.topics) {
-      const ready = t.id && LESSONS[t.id];
+      const ready = t.id && LESSONS[t.id] && !t.soon;
       const card = document.createElement("button");
       card.className = "card " + (ready ? "ready" : "locked");
       card.innerHTML = `<span>${t.title}</span>` +
@@ -228,6 +228,21 @@ function stageDOM(b, prevForPop, live) {
     }
     out.appendChild(buildHashes(s, live));
   }
+  else if (s.kind === "divbox") {
+    if (s.context) {
+      const ctx = document.createElement("div");
+      ctx.style.cssText = "font-size:1.25rem;color:var(--soft);font-weight:700";
+      ctx.textContent = s.context;
+      out.appendChild(ctx);
+    }
+    out.appendChild(buildDivBox(s, prev));
+    if (s.note) {
+      const note = document.createElement("div");
+      note.className = "note-card";
+      note.innerHTML = `<span class="note-title">${s.note.title}</span>${s.note.text}`;
+      out.appendChild(note);
+    }
+  }
   else if (s.kind === "columns") {
     if (s.context) {
       const ctx = document.createElement("div");
@@ -261,7 +276,7 @@ function renderStage(b, forward) {
   clearHashTimers();
   stage.appendChild(stageDOM(b, forward ? prevSpec : null, true));
   const s = b.show || {};
-  prevSpec = (s.kind === "columns" || s.kind === "fingers") ? s : null;
+  prevSpec = (s.kind === "columns" || s.kind === "fingers" || s.kind === "divbox") ? s : null;
 }
 
 
@@ -1058,6 +1073,153 @@ function buildHashes(spec, live) {
     }
   }
   return wrap;
+}
+
+/* ---------- stage content: long division ----------
+   The division house: divisor outside on the left, dividend under the bar,
+   quotient written above it, and the divide / multiply / subtract / bring-down
+   work stacked underneath.
+
+   Everything lines up to the DIVIDEND's columns, so a work row is just a
+   string padded to the dividend's width — the same trick buildColumns uses.
+   One difference worth knowing: column indices here count from the LEFT
+   (0 = the dividend's first digit), because long division is worked left to
+   right. The column lessons index from the right, because those algorithms
+   are worked right to left. Each matches the direction of its own algorithm.
+
+     divisor   : the number outside the house ("7")
+     dividend  : the number under the bar ("476")
+     quotient  : padded string written above the bar. A space leaves a cell
+                 blank, so " 6 " puts a 6 above the dividend's middle digit.
+                 Digits that changed since the last beat pop in.
+     hl        : dividend column indices to highlight — the digits we are
+                 dividing into on this beat
+     remainder : text printed to the right of the quotient ("R 3")
+     rows      : the work under the house, top to bottom:
+                   t     : padded to the dividend's width
+                   op    : operator for the left slot, usually "−"
+                   rule  : [from, to] — the subtraction line drawn under this
+                           row, spanning only those columns
+                   bring : column index of a digit just brought down. It gets
+                           an arrow above it and lands in gold.
+                   red   : the whole row in carry-red
+                   hl    : column indices to highlight in this row
+                   final : the landed answer, boxed like a result row      */
+
+const DIV_ARROW = "↓";
+
+function buildDivBox(spec, prevForPop) {
+  const dividend = String(spec.dividend);
+  const W = dividend.length;
+  const pad = t => String(t == null ? "" : t).padEnd(W, " ").slice(0, W);
+
+  const block = document.createElement("div");
+  block.className = "div-block";
+
+  /* Every row is: one left slot | one cell per dividend column. The left slot
+     is a fixed width, so a work row lands under the digit it belongs to
+     without any measuring. It holds the divisor on the house row and the
+     operator on a work row — both live just outside the house wall, which is
+     where they are written on paper. */
+  const addSlot = (row, text, cls) => {
+    const dv = document.createElement("div");
+    dv.className = "cell dv-slot" + (cls || "");
+    dv.textContent = text || "";
+    row.appendChild(dv);
+  };
+
+  const mkRow = (cls, text, opts = {}) => {
+    const row = document.createElement("div");
+    row.className = "dv-row " + cls;
+    const padded = pad(text);
+    /* The operator belongs directly beside the number it acts on, the way it
+       is written on paper. If this row starts partway into the house there is
+       a blank cell there to put it in; if it starts at the far left there is
+       not, so it falls back to the slot outside the wall. */
+    const firstDigit = padded.search(/\S/);
+    const opCol = opts.op && !opts.divisor && firstDigit > 0 ? firstDigit - 1 : -1;
+    const slotText = opts.divisor || (opCol === -1 ? (opts.op || "") : "");
+    addSlot(row, slotText,
+            (opts.house ? " house" : "") + (slotText && !opts.divisor ? " is-op" : ""));
+    const from = opts.popFrom == null ? null : pad(opts.popFrom);
+    for (let c = 0; c < W; c++) {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      const ch = padded[c];
+      const blank = ch === undefined || ch.trim() === "";
+      cell.textContent = blank ? "" : ch;
+      if (blank) cell.classList.add("empty");
+      if (opts.house) cell.classList.add("under-bar");
+      if (opts.hl && opts.hl.includes(c) && !blank) cell.classList.add("focus");
+      if (opts.red && !blank) cell.classList.add("red");
+      if (opts.bring === c && !blank) cell.classList.add("brought");
+      if (from && !blank && ch !== from[c]) cell.classList.add("pop");
+      if (c === opCol) {
+        cell.textContent = opts.op;
+        cell.classList.remove("empty");
+        cell.classList.add("is-op");
+      }
+      row.appendChild(cell);
+    }
+    block.appendChild(row);
+    return row;
+  };
+
+  // the subtraction line, drawn only under the columns being subtracted
+  const mkRule = range => {
+    const row = document.createElement("div");
+    row.className = "dv-row dv-rule-row";
+    // one unbroken line placed over the range, rather than a border per cell:
+    // per-cell borders leave hairline seams that read as gaps in the rule
+    row.style.gridTemplateColumns = `var(--dv-slot) repeat(${W}, var(--dv-cell))`;
+    const line = document.createElement("div");
+    line.className = "dv-ruleline";
+    line.style.gridColumn = `${range[0] + 2} / span ${range[1] - range[0] + 1}`;
+    row.appendChild(line);
+    block.appendChild(row);
+  };
+
+  const mkArrow = col => {
+    const row = document.createElement("div");
+    row.className = "dv-row dv-arrow-row";
+    addSlot(row, "", "");
+    for (let c = 0; c < W; c++) {
+      const slot = document.createElement("div");
+      slot.className = "cell dv-arrow";
+      slot.textContent = c === col ? DIV_ARROW : "";
+      row.appendChild(slot);
+    }
+    block.appendChild(row);
+  };
+
+  // the quotient, above the bar
+  const q = mkRow("dv-quot", spec.quotient || "", {
+    popFrom: prevForPop ? (prevForPop.quotient || "") : null,
+  });
+  if (spec.remainder) {
+    const rem = document.createElement("div");
+    rem.className = "dv-rem";
+    rem.textContent = spec.remainder;
+    q.appendChild(rem);
+  }
+
+  // the house itself
+  mkRow("dv-dividend", dividend, { divisor: spec.divisor, house: true, hl: spec.hl });
+
+  (spec.rows || []).forEach((r, i) => {
+    if (r.bring != null) mkArrow(r.bring);
+    // a row that did not exist on the previous beat pops in whole; one that
+    // did pops only the digits that changed (the brought-down digit)
+    const prevRows = prevForPop && prevForPop.rows;
+    const prevR = prevRows ? prevRows[i] : null;
+    mkRow("dv-work" + (r.final ? " dv-final" : ""), r.t, {
+      op: r.op, red: r.red, hl: r.hl, bring: r.bring,
+      popFrom: prevForPop ? (prevR ? prevR.t : "") : null,
+    });
+    if (r.rule) mkRule(r.rule);
+  });
+
+  return block;
 }
 
 function buildColumns(spec, prevForPop) {

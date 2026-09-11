@@ -421,6 +421,31 @@ button{font:inherit; cursor:pointer}
 .mrow.result .cell{color:var(--ink)}
 .mrow.result.final .cell:not(.empty):not(.op){background:#ffe3b0; border-radius:10px}
 
+/* long division: the house.
+   The bracket is the left slot's right border meeting the dividend cells' top
+   border — two straight strokes of the same weight, which is exactly the shape
+   students see in the binder. --dv-cell repeats .cell's width so the rule rows,
+   which are placed on an explicit grid, line up with the digit rows. */
+.div-block{display:flex; flex-direction:column; align-items:flex-start;
+  --dv-cell:clamp(2.8rem, 5.2vh, 4.2rem); --dv-slot:clamp(3rem, 5.6vh, 4.6rem)}
+.dv-row{display:grid; grid-auto-flow:column; align-items:center}
+/* the left slot: divisor on the house row, operator on a work row */
+.dv-slot{width:var(--dv-slot); justify-content:flex-end; padding-right:.4rem}
+.dv-slot.is-op, .cell.is-op{color:var(--soft)}
+.dv-slot.house{border-right:7px solid var(--ink)}
+.dv-dividend .under-bar{border-top:7px solid var(--ink)}
+/* the subtraction line spans only the columns being subtracted, so it never
+   reaches under a digit we have not touched yet */
+.dv-rule-row{margin:.1rem 0; height:.5rem}
+.dv-ruleline{border-top:6px solid var(--ink); border-radius:3px}
+/* the bring-down arrow, in the same gold as the digit it drags down */
+.dv-arrow-row .cell{height:clamp(1.3rem, 2.6vh, 2rem); font-size:clamp(1.2rem, 2.6vh, 1.9rem);
+  color:var(--gold); font-weight:900; line-height:1}
+.cell.brought{color:var(--gold)}
+.dv-row.dv-final .cell:not(.empty):not(.dv-slot):not(.is-op){background:#ffe3b0; border-radius:10px}
+.dv-rem{display:flex; align-items:center; white-space:nowrap; padding-left:.7rem;
+  font-size:clamp(1.3rem, 2.9vh, 2.3rem); font-weight:800; color:var(--accent)}
+
 /* place-value colors (labels + focused column tint follow these) */
 .pl-0{color:var(--p-units)} .pl-1{color:var(--p-tens)} .pl-2{color:var(--p-hundreds)} .pl-3{color:var(--p-thousands)}
 
