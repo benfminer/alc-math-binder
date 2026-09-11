@@ -128,6 +128,7 @@ presenter window just shows less.
 | `note` | A titled callout (recall facts, definitions). |
 | `answer` | The reveal card after an `ask`. |
 | `columns` | Vertical column arithmetic: carries, borrows, crossed-out regrouping, place-value colors. |
+| `divbox` | Long division: the house, quotient above the bar, bring-down arrows, remainder. |
 | `pvchart` | Place-value chart. |
 | `blocks` | Base-ten blocks. |
 | `fingers` | Finger-counting hands, for the addition/subtraction fact lessons. |
