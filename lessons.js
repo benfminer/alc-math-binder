@@ -40,6 +40,18 @@ const BINDER = [
     { title: "Integers: Add, Subtract, Multiply, Divide", soon: true },
     { title: "Evaluating Expressions", soon: true },
   ]},
+  /* Money sits after Operations because counting a pile is counting on, which
+     comes from the finger lessons, and making change is Subtracting by Counting
+     Up wearing a cashier's apron. It sits BEFORE Fractions & Decimals on
+     purpose: $6.35 is the first decimal point a student meets here, and it
+     arrives attached to something they can hold. */
+  { unit: "Money", topics: [
+    { id: "money-coins",  title: "Coins and What They Are Worth" },
+    { id: "money-count",  title: "Counting a Handful of Coins" },
+    { id: "money-make",   title: "Making an Amount" },
+    { id: "money-change", title: "Making Change from $1.00" },
+    { id: "money-bills",  title: "Making Change with Bills" },
+  ]},
   { unit: "Factors & Multiples", topics: [
     { title: "Prime Numbers", soon: true },
     { title: "Factors and Multiples", soon: true },
@@ -2067,5 +2079,682 @@ LESSONS["div-large"] = {
       say: "Here is our recipe. Put it in the house. Take just enough digits. Ask how many fit, and look it up. Multiply. Subtract. Bring the next one down and go again. When you run out of digits, whatever is left is the remainder. Same seven steps, every problem, no matter how big the pile.",
       cue: "Leave this up. The looking-it-up step is the one worth repeating as they copy it down.",
     },
+  ],
+};
+
+/* ============================================================
+   LESSON: Coins and What They Are Worth
+   Opens the Money unit. Short on purpose — most of the class can already name
+   the coins; this is the values review that Counting a Handful needs, plus the
+   one idea they get wrong every time: the dime is the smallest coin and still
+   beats the nickel. Money is written $0.05 here and everywhere, never 5 cents.
+   ============================================================ */
+LESSONS["money-coins"] = {
+  id: "money-coins",
+  title: "Coins and What They Are Worth",
+  beats: [
+
+    {
+      show: { kind: "title", kicker: "Money", title: "Coins and What They Are Worth",
+              goal: "We will learn what each coin is worth, and how we write it." },
+      say: "Today we are getting our money straight. Not counting it yet. Just what each coin is worth, and how we write that down. Everything after this in the money unit stands on this lesson.",
+      cue: "If you have real coins, hand them out now. This lesson is better held than watched.",
+    },
+
+    {
+      show: { kind: "story", text: "You have coins in your pocket. Before you can count them, you have to know what each one is worth. There are only four coins to know, and one bill." },
+      say: "Here is the thing about coins. You cannot count them until you know what each one is worth. And the good news is there are only four you really need. Four coins and one bill. That is the whole list.",
+    },
+
+    {
+      step: "Penny = $0.01",
+      show: { kind: "coins", coins: ["penny"], labels: true, big: true,
+              caption: "The penny" },
+      say: "The penny. Brown, not silver, so it is the easy one to spot. A penny is worth one cent, and we write that as a dollar sign, zero, dot, zero one. Dollar zero point zero one.",
+      cue: "They will want to write 1 cent with a c. We never do. Always the dollar sign.",
+    },
+
+    {
+      show: { kind: "note", title: "How we write money", text: "Always a <b>$</b>, and always <b>two places</b> after the dot.<br>$0.01 &nbsp; $0.05 &nbsp; $0.25 &nbsp; $1.00<br>Even when there is no whole dollar, the dollar sign stays." },
+      say: "This is the rule for the whole unit. Money always gets a dollar sign, and always two places after the dot. Even when you do not have a whole dollar. One penny is not one. It is dollar zero point zero one. Write it the same way every single time and money stops being confusing.",
+      cue: "This is the non-negotiable one. Correct it every time you see it this week.",
+    },
+
+    {
+      step: "Nickel = $0.05",
+      show: { kind: "coins", coins: ["nickel"], labels: true, big: true,
+              caption: "The nickel" },
+      say: "The nickel. Silver, and fat. A nickel is worth five cents. Dollar zero point zero five. One nickel is the same as five pennies.",
+    },
+
+    {
+      step: "Dime = $0.10",
+      show: { kind: "coins", coins: ["dime"], labels: true, big: true,
+              caption: "The dime" },
+      say: "The dime. Also silver, but look at it. It is the little one. A dime is worth ten cents. Dollar zero point one zero.",
+      ask: "The dime is smaller than the nickel. Is it worth less?",
+      cue: "Let them answer wrong. The next beat is the point of this lesson.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["penny", "nickel", "dime"], labels: true,
+              hl: [2], caption: "Same three coins, real sizes" },
+      say: "No. The dime is the smallest coin we have, and it beats both of them. It is smaller than a penny and it is worth ten times as much. Smaller than a nickel and worth twice as much.",
+      cue: "These are drawn at their real sizes. Hold up a real dime and a real nickel.",
+    },
+
+    {
+      show: { kind: "note", title: "Watch out", text: "<b>Size does not tell you value.</b><br>The dime is the smallest coin and it beats the nickel and the penny.<br>You have to know the coin, not guess by how big it is." },
+      say: "So here is the trap. Size does not tell you what a coin is worth. Big does not mean more. You have to actually know the coin. That is the only part of today you have to memorize.",
+      cue: "This is the mistake that wrecks counting a pile. Name it out loud now so you can point back at it.",
+    },
+
+    {
+      step: "Quarter = $0.25",
+      show: { kind: "coins", coins: ["quarter"], labels: true, big: true,
+              caption: "The quarter" },
+      say: "The quarter. The big silver one. A quarter is worth twenty five cents. Dollar zero point two five. This is the one you want in your pocket.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "dime", "nickel", "penny"], labels: true,
+              caption: "All four coins, biggest value on the left" },
+      say: "There they are. All four. And notice how I have lined them up. Biggest value on the left, smallest on the right. Quarter, dime, nickel, penny. Not by size. By what they are worth. Remember that order, because next lesson it is the first thing we do.",
+      ask: "Which one is worth the most?",
+      cue: "Quarter. Then dime, then nickel, then penny. Drill this order — lesson 2 is built on it.",
+    },
+
+    {
+      step: "One dollar = $1.00",
+      show: { kind: "coins", coins: ["one"], labels: true, big: true,
+              caption: "One dollar" },
+      say: "And the dollar. One dollar is worth one hundred cents, and we write it dollar one point zero zero. One dollar is four quarters. It is ten dimes. It is one hundred pennies.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter", "quarter", "quarter"], labels: true,
+              tally: true, goal: 100, goalLabel: "One dollar is", instant: true,
+              caption: "Four quarters" },
+      say: "Look. Four quarters. Twenty five, fifty, seventy five, one dollar. Four quarters make a whole dollar. That one is worth knowing by heart, because in two lessons we are going to be making change out of a dollar all day long.",
+      cue: "Say the count with them: 25, 50, 75, a dollar.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["dime", "dime", "dime", "dime", "dime", "dime", "dime", "dime", "dime", "dime"],
+              labels: false, tally: true, goal: 100, goalLabel: "One dollar is",
+              caption: "Ten dimes" },
+      say: "And here is the other one. Ten dimes also make a dollar. Count along with me. Ten, twenty, thirty, forty, fifty, sixty, seventy, eighty, ninety, one dollar.",
+      cue: "Count out loud together. Press Count again if the room fell behind.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["nickel", "dime", "quarter", "penny"], labels: false,
+              caption: "Name each one" },
+      ask: "Name each coin, left to right. What is each one worth?",
+      say: "Your turn. No labels this time. Go left to right and tell me what each coin is and what it is worth. Say it the way we write it. Dollar zero point something.",
+      cue: "Nickel $0.05, dime $0.10, quarter $0.25, penny $0.01. Make them use the dollar form.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["nickel", "dime", "quarter", "penny"], labels: true,
+              caption: "Name each one" },
+      say: "Nickel, five cents. Dime, ten cents. Quarter, twenty five cents. Penny, one cent. If you got the dime and the nickel the right way round, you have got the hard part of today.",
+    },
+
+    {
+      show: { kind: "recap" },
+      say: "That is the whole list. Four coins and a dollar. Next lesson we stop naming them and start counting a handful of them, and the first thing we will do is put them in the order you just saw.",
+      cue: "Leave this up. It is the reference card for the rest of the unit.",
+    },
+
+  ],
+};
+
+/* ============================================================
+   LESSON: Counting a Handful of Coins
+   The heart of the unit. Sort biggest value first, start at the biggest coin,
+   count on and never go back to zero — the same count-on move as the finger
+   lessons. Worked example 2 quarters + 1 dime + 3 pennies = $0.63, shown
+   jumbled first so the sort is visibly the thing that makes it countable.
+   ============================================================ */
+LESSONS["money-count"] = {
+  id: "money-count",
+  title: "Counting a Handful of Coins",
+  beats: [
+
+    {
+      show: { kind: "title", kicker: "Money", title: "Counting a Handful of Coins",
+              goal: "We will find out how much a pile of coins is worth." },
+      say: "Last lesson we learned what each coin is worth. Today we count a whole handful of them. And there is an order you do it in. Do it in that order and it is easy. Do it in any other order and you will get lost every time.",
+    },
+
+    {
+      show: { kind: "story", text: "You pull a handful of coins out of your pocket at the store. How much money are you holding?" },
+      say: "Here is the situation. You are at the store, you dig in your pocket, and out comes a handful of coins. All mixed up. You need to know how much you are holding before you get to the front of the line.",
+      cue: "If you have real coins, give each student a small mixed handful now.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["penny", "quarter", "penny", "dime", "quarter", "penny"],
+              caption: "Straight out of your pocket" },
+      ask: "How much is this? Don't add it yet. Just look at it.",
+      say: "There is the handful, lying the way it landed. Do not try to add it up yet. Just look at it. Kind of a mess, right? If we start counting from the left we go one, then twenty six, then twenty seven, then thirty seven. Jumping all over the place.",
+      cue: "Let them try and get tangled. The tangle is the point.",
+    },
+
+    {
+      show: { kind: "note", title: "The trouble", text: "Counting coins in the order they happen to be lying makes you <b>jump up and down</b>.<br>Big jump, tiny jump, big jump. That is how you lose your place." },
+      say: "That is the trouble. The coins are not lying in any order, so the count jumps. A big jump, then a tiny jump, then a big jump again. Your brain cannot hold on to that. So the very first thing we do is not counting at all.",
+    },
+
+    {
+      step: "Put the coins in order, biggest value first.",
+      show: { kind: "coins", coins: ["quarter", "quarter", "dime", "penny", "penny", "penny"],
+              labels: true, gapAfter: [1, 2], caption: "Same coins, sorted" },
+      say: "Same handful. I have not taken anything away or added anything. I just put them in order, biggest value first. Quarters, then the dime, then the pennies. Exactly the order you learned last lesson. Now the count will go big jumps first and little jumps last, and that is an order your brain can hold.",
+      cue: "Have them physically slide their own coins into this order. Quarters, dimes, nickels, pennies.",
+    },
+
+    {
+      step: "Start at the biggest coin. Say its value out loud.",
+      show: { kind: "coins", coins: ["quarter", "quarter", "dime", "penny", "penny", "penny"],
+              labels: true, gapAfter: [1, 2], tally: true, upto: 1, instant: true },
+      say: "Now we start. And we do not start at zero. We start at the biggest coin and just say what it is worth. Twenty five. Dollar zero point two five.",
+      cue: "Starting AT the first number, not at zero, is the same move as the adding lesson.",
+    },
+
+    {
+      step: "Count on to the next coin. Never go back to zero.",
+      show: { kind: "coins", coins: ["quarter", "quarter", "dime", "penny", "penny", "penny"],
+              labels: true, gapAfter: [1, 2], tally: true, upto: 2, instant: true },
+      say: "Next coin is another quarter. So we count on twenty five more. Twenty five, fifty. We did not start over. We kept going from where we were.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter", "dime", "penny", "penny", "penny"],
+              labels: true, gapAfter: [1, 2], tally: true, upto: 3, instant: true },
+      say: "Next is the dime. Ten more. Fifty, sixty. Dollar zero point six zero.",
+      ask: "Three pennies left. Where does the count finish?",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter", "dime", "penny", "penny", "penny"],
+              labels: true, gapAfter: [1, 2], tally: true },
+      say: "Let us do the whole thing from the start, out loud, together. Twenty five. Fifty. Sixty. Sixty one. Sixty two. Sixty three.",
+      cue: "Count along with the animation. Press Count again and make the room say it with you.",
+    },
+
+    {
+      step: "Write the total with a dollar sign.",
+      show: { kind: "answer", text: "The handful is $0.63. That is sixty three cents. We write it with a dollar sign and two places after the dot." },
+      say: "Sixty three cents. And we write it dollar zero point six three. Not sixty three with a little c. Dollar zero point six three, every time.",
+    },
+
+    {
+      show: { kind: "note", title: "The mistake to watch for", text: "Do <b>not</b> start over at zero when you move to the next coin.<br>You already have $0.50. The dime does not make it ten. It makes it sixty." },
+      say: "Here is the mistake I will be watching for all week. Getting to fifty, then looking at the dime and saying ten. No. You already have fifty. The dime does not make it ten, it makes it sixty. You never go back to zero. You keep climbing.",
+      cue: "Same error as restarting the tally count in the times table lesson. Call it by name.",
+    },
+
+    {
+      show: { kind: "story", text: "Your turn. Here is a different handful. Same four steps." },
+      say: "Your turn now. Different handful, exact same four steps. I am going to do less and less of it.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["nickel", "quarter", "penny", "quarter", "penny", "nickel", "quarter", "penny", "penny"],
+              caption: "Out of your pocket again" },
+      ask: "What is the very first thing we do?",
+      ref: 1,
+      say: "There is the handful. Do not count. What is step one?",
+      cue: "Put them in order, biggest value first. Do not let anyone start counting yet.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter", "quarter", "nickel", "nickel", "penny", "penny", "penny", "penny"],
+              labels: true, gapAfter: [2, 4], caption: "Sorted: quarters, nickels, pennies" },
+      ref: 1,
+      say: "Sorted. Three quarters, two nickels, four pennies. Notice there is no dime in this one, and that is fine. You do not need one of every coin. You just keep them in order.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter", "quarter", "nickel", "nickel", "penny", "penny", "penny", "penny"],
+              labels: true, gapAfter: [2, 4], tally: true, upto: 3, instant: true },
+      ref: 2,
+      ask: "Three quarters. What number are we standing on?",
+      say: "Start at the biggest. Twenty five, fifty, seventy five. We are standing on seventy five cents and we have not touched the nickels yet.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter", "quarter", "nickel", "nickel", "penny", "penny", "penny", "penny"],
+              labels: true, gapAfter: [2, 4], tally: true },
+      ref: 3,
+      ask: "Count it with me, all the way.",
+      say: "Now count on with me. Seventy five. Eighty. Eighty five. Eighty six. Eighty seven. Eighty eight. Eighty nine.",
+      cue: "Nickels are the slip-up here. Some will count them as ten. Press Count again.",
+    },
+
+    {
+      show: { kind: "answer", text: "The handful is $0.89." },
+      ref: 4,
+      say: "Dollar zero point eight nine. Eighty nine cents. And look how close that is to a dollar. Eleven cents short.",
+    },
+
+    {
+      show: { kind: "recap" },
+      say: "Four steps. Sort them biggest first. Start at the biggest. Count on without going back to zero. Write it with a dollar sign. That is counting money, and you will use it for the rest of your life.",
+      cue: "Leave this up. Next lesson runs the same sort rule backwards to BUILD an amount.",
+    },
+
+  ],
+};
+
+/* ============================================================
+   LESSON: Making an Amount
+   The sort rule from Counting a Handful, run backwards: take the biggest coin
+   that does not go OVER, again and again. Worked example $0.43, practice
+   $0.78. This is the move Making Change needs when choosing which coin to
+   hand over next, so it is taught on its own first, with no change involved.
+   ============================================================ */
+LESSONS["money-make"] = {
+  id: "money-make",
+  title: "Making an Amount",
+  beats: [
+
+    {
+      show: { kind: "title", kicker: "Money", title: "Making an Amount",
+              goal: "We will build an exact amount out of coins." },
+      say: "Last lesson somebody handed us coins and we counted them. Today we go the other way. We know the amount we need, and we have to build it out of coins ourselves.",
+    },
+
+    {
+      show: { kind: "story", text: "The vending machine needs exactly $0.43. You have plenty of coins. Which ones do you put in?" },
+      say: "Here is the job. The machine needs forty three cents. Dollar zero point four three. You have a pocketful of coins, so you are not short. The question is which ones you pull out, and you want to use as few coins as you can.",
+      cue: "Any exact-amount situation works: a vending machine, a parking meter, the exact change lane.",
+    },
+
+    {
+      show: { kind: "note", title: "The rule", text: "Take the <b>biggest coin that does not go over</b>.<br>Then do it again. And again. Until you land exactly on the amount." },
+      say: "One rule, and you use it over and over. Take the biggest coin that does not go over. Then look at what is left and do it again. Biggest that does not go over. That is the whole lesson.",
+    },
+
+    {
+      step: "Take the biggest coin that does not go over.",
+      show: { kind: "coins", coins: ["quarter"], labels: true, tally: true,
+              goal: 43, goalLabel: "We need", upto: 1, instant: true,
+              caption: "Start with a quarter" },
+      say: "Biggest coin we have is a quarter, twenty five cents. Does twenty five go over forty three? No. So the quarter goes in. We are on twenty five.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter"], labels: true, tally: true,
+              goal: 43, goalLabel: "We need", dim: [1], upto: 1, instant: true,
+              caption: "Another quarter?" },
+      ask: "Could we put in a second quarter?",
+      say: "Now do it again. Biggest coin that does not go over. Could we use another quarter? Twenty five and twenty five is fifty. Fifty is past forty three. So no. The second quarter is out.",
+      cue: "Going OVER is the thing to feel here. The machine will not take fifty for a forty three cent job.",
+    },
+
+    {
+      step: "If it goes over, drop to the next coin down.",
+      show: { kind: "coins", coins: ["quarter", "dime"], labels: true, tally: true,
+              goal: 43, goalLabel: "We need", instant: true,
+              caption: "Quarter, then a dime" },
+      say: "So we drop down to the next coin. A dime. Twenty five and ten is thirty five. Thirty five is not over forty three, so the dime goes in. We are on thirty five.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "dime", "dime"], labels: true, tally: true,
+              goal: 43, goalLabel: "We need", dim: [2], upto: 2, instant: true,
+              caption: "Another dime?" },
+      ask: "Another dime would take us to what? Is that allowed?",
+      say: "Another dime? Thirty five and ten is forty five. Forty five is past forty three. Over again. So no second dime. Drop down.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "dime", "nickel"], labels: true, tally: true,
+              goal: 43, goalLabel: "We need", instant: true,
+              caption: "Quarter, dime, nickel" },
+      say: "Next coin down is the nickel. Thirty five and five is forty. Not over. The nickel goes in. Forty cents, and we need forty three.",
+    },
+
+    {
+      step: "Finish with pennies.",
+      show: { kind: "coins", coins: ["quarter", "dime", "nickel", "penny", "penny", "penny"],
+              labels: true, tally: true, goal: 43, goalLabel: "We need" },
+      say: "Three cents to go, so we finish with pennies. Count the whole thing with me. Twenty five, thirty five, forty, forty one, forty two, forty three. Landed exactly.",
+      cue: "Count along with the animation. The goal box lights up when we land on it.",
+    },
+
+    {
+      show: { kind: "answer", text: "$0.43 is a quarter, a dime, a nickel and 3 pennies. That is 6 coins, and there is no way to do it with fewer." },
+      say: "Six coins. A quarter, a dime, a nickel and three pennies. And because we took the biggest one that fit every single time, there is no way to make forty three cents with fewer coins than that. The rule does not just work, it gives you the best answer.",
+    },
+
+    {
+      show: { kind: "story", text: "Your turn. The machine needs $0.78." },
+      say: "Your turn. Seventy eight cents. Dollar zero point seven eight. Same rule, over and over. Biggest coin that does not go over.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter", "quarter"], labels: true, tally: true,
+              goal: 78, goalLabel: "We need", instant: true, caption: "How many quarters fit?" },
+      ref: 1,
+      ask: "How many quarters can we use before we go over 78?",
+      say: "Start big. Quarters. Twenty five, fifty, seventy five. Three of them, and we are on seventy five.",
+      cue: "A fourth quarter would be a dollar. Way over. Let someone say that out loud.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter", "quarter", "nickel"], labels: true, tally: true,
+              goal: 78, goalLabel: "We need", dim: [3], upto: 3, instant: true },
+      ref: 2,
+      ask: "Seventy five, and we need seventy eight. Can we use a dime? A nickel?",
+      say: "Three to go. A dime would be eighty five. Over. A nickel would be eighty. Still over. Both of them are too big for three cents.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter", "quarter", "penny", "penny", "penny"],
+              labels: true, tally: true, goal: 78, goalLabel: "We need" },
+      ref: 3,
+      say: "So pennies it is. Count with me. Twenty five, fifty, seventy five, seventy six, seventy seven, seventy eight.",
+    },
+
+    {
+      show: { kind: "answer", text: "$0.78 is 3 quarters and 3 pennies. 6 coins." },
+      say: "Three quarters and three pennies. Six coins again. You built it yourself.",
+    },
+
+    {
+      show: { kind: "recap" },
+      say: "Biggest coin that does not go over, again and again, and finish with pennies. Hold on to that rule, because next lesson we use it to make change, and making change is the one you will actually get paid to do.",
+    },
+
+  ],
+};
+
+/* ============================================================
+   LESSON: Making Change from $1.00
+   The one the unit was built for. Opens with a deliberate callback to
+   Subtracting by Counting Up: you start at the small number and climb to the
+   big one, and the coins you used on the way ARE the change, exactly the way
+   the raised fingers ARE the answer. No borrowing, no decimals to line up.
+   Worked example $0.65 paid with $1.00, practice $0.42 paid with $1.00.
+   ============================================================ */
+LESSONS["money-change"] = {
+  id: "money-change",
+  title: "Making Change from $1.00",
+  beats: [
+
+    {
+      show: { kind: "title", kicker: "Money", title: "Making Change from $1.00",
+              goal: "We will count up from the price to what the customer paid." },
+      say: "This is the one. Making change. And I am going to tell you right now that you already know how to do it, because we did it weeks ago with our fingers.",
+    },
+
+    {
+      show: { kind: "note", title: "Remember this?", text: "To do <b>15 − 8</b> we never counted backwards.<br>We started at <b>8</b> and counted <b>up</b> to 15. The fingers we raised <i>were</i> the answer." },
+      say: "Remember subtracting. We never counted backwards, not once. We started at the little number and counted up to the big one, and the fingers we put up were the answer. That is all making change is. Same move. You just read a different thing at the end.",
+      cue: "Deliberate callback to Subtracting by Counting Up. Flip back to it if they need it.",
+    },
+
+    {
+      show: { kind: "story", text: "The candy costs $0.65. The customer hands you $1.00. What do you give back?" },
+      say: "Here is the store. The candy costs sixty five cents. The customer hands you a whole dollar. You owe them money back, and that money back is called the change. Your job is to figure out how much.",
+    },
+
+    {
+      show: { kind: "note", title: "The idea", text: "You do <b>not</b> subtract. You <b>climb</b>.<br>Start at the <b>price</b>. Put coins on top until you reach what they <b>paid</b>.<br>The coins you used are the change." },
+      say: "And we are not going to subtract a dollar minus sixty five. We are going to climb. Start at the price, sixty five. Put coins on top of it, one at a time, until you get to a dollar. Whatever coins you used getting there, those are the change. Hand them over.",
+      cue: "This is what a cashier actually does. Say that out loud — it is a real job skill, not a school trick.",
+    },
+
+    {
+      step: "Start at the price, not at zero.",
+      show: { kind: "coins", coins: [], start: 65, tally: true, goal: 100,
+              goalLabel: "Climb to", caption: "The price. No coins yet." },
+      say: "So we start at sixty five. Not zero. Sixty five, because that is what the candy cost and that money is already spent. And up there is where we are climbing to. One dollar.",
+    },
+
+    {
+      step: "Add the biggest coin that does not go past.",
+      show: { kind: "coins", coins: ["quarter"], start: 65, tally: true, goal: 100,
+              goalLabel: "Climb to", labels: true, instant: true,
+              caption: "Sixty five, plus a quarter" },
+      say: "Now the same rule as last lesson. Biggest coin that does not go past. A quarter. Sixty five and twenty five is ninety. Ninety is not past a dollar, so the quarter is good. We are on ninety.",
+      cue: "Count it out loud: sixty five, seventy five, eighty five, ninety, if they need the nickels.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter"], start: 65, tally: true, goal: 100,
+              goalLabel: "Climb to", labels: true, dim: [1], upto: 1, instant: true,
+              caption: "A second quarter?" },
+      ask: "Ninety, and another quarter would be what? Is that allowed?",
+      say: "Do it again. Another quarter? Ninety and twenty five is a dollar fifteen. That is past a dollar. You would be handing the customer more money than they gave you. So no.",
+      cue: "Going past is not just wrong here, it is giving away the store's money. Let that land.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "dime"], start: 65, tally: true, goal: 100,
+              goalLabel: "Climb to", labels: true },
+      say: "Drop down to a dime. Ninety and ten is one dollar. Exactly a dollar. We are there. Count it with me. Sixty five. Ninety. One dollar.",
+      cue: "Count along. The dollar box lights up when we land on it.",
+    },
+
+    {
+      step: "The coins you used ARE the change.",
+      show: { kind: "coins", coins: ["quarter", "dime"], labels: true, tally: true,
+              instant: true, result: "The change is $0.35",
+              caption: "Two coins. Hand these back." },
+      say: "And now the good part. Look at what is sitting there. A quarter and a dime. That is what you climbed with, so that is exactly what you hand back. Twenty five and ten is thirty five. The change is dollar zero point three five.",
+      cue: "Same shape as the subtraction lesson: the fingers WERE the answer, the coins ARE the change.",
+    },
+
+    {
+      show: { kind: "answer", text: "$1.00 − $0.65 = $0.35. We never subtracted. We climbed from $0.65 up to $1.00 and looked at what we used." },
+      say: "On paper that is a dollar take away sixty five cents equals thirty five cents. But we never subtracted anything. We climbed, and then we looked at what was in our hand. Counting up got us there and we never once counted backwards.",
+    },
+
+    {
+      show: { kind: "story", text: "Your turn. The drink costs $0.42. The customer hands you $1.00." },
+      say: "Your turn. The drink is forty two cents, the customer gives you a dollar. Same climb.",
+    },
+
+    {
+      show: { kind: "coins", coins: [], start: 42, tally: true, goal: 100,
+              goalLabel: "Climb to", caption: "Where do we start?" },
+      ref: 1,
+      ask: "What number do we start on, and where are we climbing to?",
+      say: "Step one. Where do we start? Not zero. Forty two, the price. And we are climbing to a dollar.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter"], start: 42, tally: true, goal: 100,
+              goalLabel: "Climb to", labels: true, instant: true },
+      ref: 2,
+      ask: "How many quarters can we stack on before we go past a dollar?",
+      say: "Biggest coin that does not go past. A quarter takes us to sixty seven. Another quarter takes us to ninety two. A third quarter would be a dollar seventeen, way past. So two quarters and we are on ninety two.",
+      cue: "Let them try for a third quarter. Then walk them into ninety two plus twenty five.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter", "nickel"], start: 42, tally: true, goal: 100,
+              goalLabel: "Climb to", labels: true, instant: true },
+      ref: 2,
+      ask: "Ninety two. Dime or nickel?",
+      say: "Eight cents to go. A dime would be a dollar and two cents. Past. A nickel is ninety seven. Not past. So the nickel goes on.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter", "nickel", "penny", "penny", "penny"],
+              start: 42, tally: true, goal: 100, goalLabel: "Climb to", labels: true },
+      ref: 2,
+      say: "Three cents left, so three pennies. Climb it with me from the start. Forty two. Sixty seven. Ninety two. Ninety seven. Ninety eight. Ninety nine. One dollar.",
+      cue: "Count along. Press Count again and make them say every number.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter", "nickel", "penny", "penny", "penny"],
+              labels: true, tally: true, instant: true, result: "The change is $0.58",
+              caption: "Hand all six back" },
+      ref: 3,
+      ask: "Add up what we climbed with. How much change is that?",
+      say: "Two quarters, a nickel and three pennies. Fifty, fifty five, fifty six, fifty seven, fifty eight. The change is dollar zero point five eight. And notice we counted those coins exactly the way we counted a handful two lessons ago. Biggest first, count on.",
+    },
+
+    {
+      show: { kind: "answer", text: "$1.00 − $0.42 = $0.58." },
+      say: "A dollar take away forty two cents is fifty eight cents. Done, and nobody counted backwards.",
+    },
+
+    {
+      show: { kind: "recap" },
+      say: "Start at the price. Climb with the biggest coin that does not go past. The coins you used are the change. Next lesson the customer pays with a ten dollar bill, and the climb gets one extra stop in it.",
+    },
+
+  ],
+};
+
+/* ============================================================
+   LESSON: Making Change with Bills
+   The hardest one in the unit, and last on purpose. Two things are new: the
+   dollar amount has a decimal point that has to be read, and the climb gets
+   a stopping point in the middle — coins up to the next whole dollar FIRST,
+   then bills the rest of the way. $6.35 paid with $10.00, practice $4.80.
+   ============================================================ */
+LESSONS["money-bills"] = {
+  id: "money-bills",
+  title: "Making Change with Bills",
+  beats: [
+
+    {
+      show: { kind: "title", kicker: "Money", title: "Making Change with Bills",
+              goal: "We will make change when the price has dollars in it too." },
+      say: "Last lesson everything cost less than a dollar. Real life is not like that. Today the price has dollars in it, the customer pays with a ten, and we do the same climb with one extra stop in the middle.",
+    },
+
+    {
+      show: { kind: "story", text: "The sandwich costs $6.35. The customer hands you $10.00." },
+      say: "The sandwich is six dollars and thirty five cents. The customer hands you a ten dollar bill. How much do you hand back?",
+    },
+
+    {
+      show: { kind: "note", title: "Reading the price", text: "<b>$6.35</b><br>The dot splits it in two.<br><b>Left of the dot</b> is whole dollars: 6 dollars.<br><b>Right of the dot</b> is the coins part: 35 cents." },
+      say: "First, read it properly. Six point three five. That dot splits the number into two jobs. Everything left of the dot is whole dollars, so that is six dollars. Everything right of the dot is the coins part, thirty five cents. Six dollars and thirty five cents. The dot is a fence between the bills and the coins.",
+      cue: "This is their first real decimal point. Do not rush it. Read three or four prices aloud together.",
+    },
+
+    {
+      show: { kind: "note", title: "The idea", text: "Climb in <b>two stages</b>.<br><b>1.</b> Coins, up to the <b>next whole dollar</b>.<br><b>2.</b> Bills, the rest of the way to what they paid." },
+      say: "Now the trick, and this is the whole lesson. We climb in two stages. First we use coins to get up to the next whole dollar. Just the next one. Then once we are standing on a nice round dollar, we use bills the rest of the way. Coins first, then bills. Never both at once.",
+      cue: "Two stages. Say it twice. Mixing them up is where this lesson falls apart.",
+    },
+
+    {
+      step: "Stage 1: coins up to the next whole dollar.",
+      show: { kind: "coins", coins: [], start: 635, tally: true, goal: 700,
+              goalLabel: "First stop", caption: "$6.35. What is the next whole dollar?" },
+      ask: "We are at $6.35. What is the next whole dollar up?",
+      say: "We are standing on six dollars and thirty five cents. What is the next whole dollar above that? Seven dollars. That is our first stop. Not ten. Seven.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter"], start: 635, tally: true, goal: 700,
+              goalLabel: "First stop", labels: true, instant: true },
+      say: "Same rule as always. Biggest coin that does not go past. A quarter takes us to six sixty. Another quarter takes us to six eighty five. A third quarter would be seven dollars and ten cents, past our stop. So two quarters.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter", "dime", "nickel"], start: 635, tally: true,
+              goal: 700, goalLabel: "First stop", labels: true },
+      say: "Six eighty five. A dime gets us to six ninety five. A nickel gets us to seven dollars exactly. Climb it with me. Six thirty five. Six sixty. Six eighty five. Six ninety five. Seven dollars.",
+      cue: "Count along. Landing exactly on a whole dollar is the moment to make a fuss about.",
+    },
+
+    {
+      show: { kind: "note", title: "Where we are", text: "Coins so far: 2 quarters, a dime and a nickel = <b>$0.65</b>.<br>We are standing on <b>$7.00</b>. The coins part is finished." },
+      say: "Stop and look. Those four coins add up to sixty five cents, and they got us to exactly seven dollars. The coins part of this job is finished. We will not touch another coin. From here it is bills only.",
+    },
+
+    {
+      step: "Stage 2: bills the rest of the way.",
+      show: { kind: "coins", coins: ["quarter", "quarter", "dime", "nickel", "one", "one", "one"],
+              start: 635, tally: true, goal: 1000, goalLabel: "They paid", labels: true },
+      say: "Now bills. We are on seven dollars and climbing to ten. Seven, eight, nine, ten. Three one dollar bills. Watch the whole climb from the bottom.",
+      cue: "A five would jump us to twelve dollars. Ask before you show it — someone will suggest it.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter", "quarter", "dime", "nickel", "one", "one", "one"],
+              labels: true, tally: true, instant: true, result: "The change is $3.65",
+              caption: "Everything we climbed with. Hand it all back." },
+      ask: "Add up the bills and the coins. How much change is that?",
+      say: "There it all is. Three dollar bills and sixty five cents in coins. Three dollars and sixty five cents. The change is three point six five. And the way a cashier says it out loud is the way we climbed it: sixty five cents makes seven, and three more makes ten.",
+      cue: "Have them say it as a cashier: 'sixty five makes seven, and three makes ten.'",
+    },
+
+    {
+      show: { kind: "answer", text: "$10.00 − $6.35 = $3.65. Coins up to $7.00, then bills up to $10.00." },
+      say: "Ten dollars take away six thirty five is three sixty five. Two stages. Coins to the next whole dollar, bills the rest of the way. We still never subtracted and we still never counted backwards.",
+    },
+
+    {
+      show: { kind: "story", text: "Your turn. The shirt costs $4.80. The customer hands you $10.00." },
+      say: "Your turn. The shirt is four dollars and eighty cents. The customer pays with a ten.",
+    },
+
+    {
+      show: { kind: "coins", coins: [], start: 480, tally: true, goal: 500,
+              goalLabel: "First stop", caption: "$4.80. First stop?" },
+      ref: 1,
+      ask: "What is the next whole dollar above $4.80?",
+      say: "Stage one. What is the next whole dollar above four dollars and eighty cents? Five dollars. Twenty cents away.",
+      cue: "Some will say ten. Ten is where we are GOING, not the first stop.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["quarter"], start: 480, tally: true, goal: 500,
+              goalLabel: "First stop", labels: true, dim: [0], upto: 0, instant: true },
+      ref: 1,
+      ask: "Can we use a quarter here?",
+      say: "Biggest coin that does not go past. Careful. A quarter is twenty five cents, and four eighty plus twenty five is five dollars and five cents. That is past five dollars. So no quarter this time.",
+      cue: "This is the trap beat. They will reach for the quarter out of habit.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["dime", "dime"], start: 480, tally: true, goal: 500,
+              goalLabel: "First stop", labels: true },
+      ref: 1,
+      say: "Drop to a dime. Four ninety. Another dime. Five dollars. Two dimes and stage one is done.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["dime", "dime", "five"], start: 480, tally: true, goal: 1000,
+              goalLabel: "They paid", labels: true },
+      ref: 2,
+      ask: "We are on $5.00 and they paid $10.00. Which bill?",
+      say: "Stage two. We are standing on five dollars and we need to get to ten. This time we do not need three bills. One five dollar bill does the whole jump. Five and five is ten.",
+      cue: "Biggest bill that does not go past, same rule the coins follow.",
+    },
+
+    {
+      show: { kind: "coins", coins: ["dime", "dime", "five"], labels: true, tally: true,
+              instant: true, result: "The change is $5.20",
+              caption: "A five and two dimes" },
+      ref: 3,
+      say: "A five dollar bill and two dimes. Five dollars and twenty cents. The change is five point two zero.",
+    },
+
+    {
+      show: { kind: "answer", text: "$10.00 − $4.80 = $5.20. Twenty cents makes $5.00, and five more makes $10.00." },
+      say: "Say it the cashier way. Twenty cents makes five dollars, and five more makes ten. That is the sentence you will say out loud at a real register.",
+    },
+
+    {
+      show: { kind: "recap" },
+      say: "That is the money unit. Know your coins, sort them biggest first, count on without going back to zero, and to make change you climb instead of subtracting. Coins to the next whole dollar, then bills the rest of the way. You can do this at a real register now.",
+      cue: "Good place to bring out real coins and bills and run a pretend register for ten minutes.",
+    },
+
   ],
 };

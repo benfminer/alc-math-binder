@@ -198,6 +198,21 @@ function stageDOM(b, prevForPop, live) {
   else if (s.kind === "rect") {
     out.appendChild(buildRect(s, live));
   }
+  else if (s.kind === "coins") {
+    if (s.context) {
+      const ctx = document.createElement("div");
+      ctx.style.cssText = "font-size:1.25rem;color:var(--soft);font-weight:700";
+      ctx.textContent = s.context;
+      out.appendChild(ctx);
+    }
+    out.appendChild(buildCoins(s, live));
+    if (s.note) {
+      const note = document.createElement("div");
+      note.className = "note-card";
+      note.innerHTML = `<span class="note-title">${s.note.title}</span>${s.note.text}`;
+      out.appendChild(note);
+    }
+  }
   else if (s.kind === "grid") {
     out.appendChild(buildFactGrid(s));
   }
@@ -725,6 +740,198 @@ function buildRect(spec, live) {
   return wrap;
 }
 
+/* ---------- stage content: coins and bills ----------
+   A row of money laid out left to right and tapped one at a time while a
+   running total climbs. The same renderer does two jobs:
+     counting a handful  - the total starts at 0 and we add coin by coin
+     making change       - the total starts AT the price (start) and climbs to
+                           what the customer paid (goal), so the coins left on
+                           the stage ARE the change
+   Money is ALWAYS written in dollar notation: $0.05, never 5 cents, even when
+   there is no whole dollar. That is how this class writes it everywhere.
+     coins    : draw order, e.g. ["quarter","quarter","dime","penny"]
+                coins - penny nickel dime quarter half
+                bills - one five ten
+     start    : cents the running total begins at (default 0)
+     goal     : cents; draws a goal chip that lights up once we land on it
+     goalLabel: what that chip is called (default "We need")
+     tally    : show the running total under the row
+     labels   : print each coin's value under it
+     hl / dim : indices drawn picked out / greyed out
+     gapAfter : indices after which the row opens a wider gap (sorted groups)
+     big      : draw everything larger, for one coin held up on its own
+     result   : a sentence in the answer box under the row
+     upto     : count only the first N coins, leaving the rest on the stage
+     instant  : render already counted, no animation
+     caption
+*/
+const MONEY = {
+  penny:   { cents: 1,    mm: 19.05, name: "PENNY",   metal: "copper" },
+  nickel:  { cents: 5,    mm: 21.21, name: "NICKEL",  metal: "silver" },
+  dime:    { cents: 10,   mm: 17.91, name: "DIME",    metal: "silver" },
+  quarter: { cents: 25,   mm: 24.26, name: "QUARTER", metal: "silver" },
+  half:    { cents: 50,   mm: 30.61, name: "HALF",    metal: "silver" },
+  one:     { cents: 100,  bill: "1",  name: "ONE DOLLAR" },
+  five:    { cents: 500,  bill: "5",  name: "FIVE DOLLARS" },
+  ten:     { cents: 1000, bill: "10", name: "TEN DOLLARS" },
+};
+
+/* cents -> the only way money is ever written on this stage */
+function money(cents) {
+  const sign = cents < 0 ? "-" : "";
+  const c = Math.abs(cents);
+  return sign + "$" + Math.floor(c / 100) + "." + String(c % 100).padStart(2, "0");
+}
+
+function coinEl(key) {
+  const m = MONEY[key];
+
+  if (m.bill) {
+    /* Bills are NOT on the coins' millimetre scale. A real bill is 156mm wide
+       and two of them beside a quarter would fill the projector. Every bill is
+       drawn the same size as every other bill, which is true of real bills. */
+    const w = 62, h = 27;
+    const svg = svgEl("svg", { class: "cn-svg", viewBox: `0 0 ${w} ${h}` });
+    svg.style.height = `calc(var(--cn-u) * ${h})`;
+    svg.appendChild(svgEl("rect", { class: "cn-bill", x: 1, y: 1, width: w - 2, height: h - 2, rx: 2 }));
+    svg.appendChild(svgEl("rect", { class: "cn-bill-in", x: 4.5, y: 4.5, width: w - 9, height: h - 9, rx: 1.5 }));
+    const big = svgEl("text", { class: "cn-face bill", x: w / 2, y: h / 2 + 2.6,
+                                "text-anchor": "middle" });
+    big.textContent = "$" + m.bill;
+    svg.appendChild(big);
+    [[9, 8.5], [w - 9, h - 4.5]].forEach(([x, y]) => {
+      const t = svgEl("text", { class: "cn-corner", x: x, y: y, "text-anchor": "middle" });
+      t.textContent = m.bill;
+      svg.appendChild(t);
+    });
+    return svg;
+  }
+
+  /* A coin is drawn at its real diameter in millimetres. Every coin on the
+     stage shares --cn-u, so a dime really is smaller than a penny, which is
+     the whole point of the beat that says size does not tell you value. */
+  const d = m.mm, pad = 1.6, box = d + pad * 2, r = d / 2, c = box / 2;
+  const svg = svgEl("svg", { class: "cn-svg " + m.metal, viewBox: `0 0 ${box} ${box}` });
+  svg.style.height = `calc(var(--cn-u) * ${box})`;
+  svg.appendChild(svgEl("circle", { class: "cn-rim", cx: c, cy: c, r: r - 0.6 }));
+  svg.appendChild(svgEl("circle", { class: "cn-face-c", cx: c, cy: c, r: r - 2.2 }));
+  const t = svgEl("text", { class: "cn-face", x: c, y: c + 1.1, "text-anchor": "middle" });
+  t.textContent = m.name;
+  t.setAttribute("font-size", (d / Math.max(5.5, m.name.length * 1.05)).toFixed(2));
+  svg.appendChild(t);
+  return svg;
+}
+
+function buildCoins(spec, live) {
+  const wrap = document.createElement("div");
+  wrap.className = "cn-wrap" + (spec.big ? " big" : "");
+
+  if (spec.caption) {
+    const cap = document.createElement("div");
+    cap.className = "pv-caption";
+    cap.textContent = spec.caption;
+    wrap.appendChild(cap);
+  }
+
+  const row = document.createElement("div");
+  row.className = "cn-row";
+  wrap.appendChild(row);
+
+  const keys = spec.coins || [];
+  const hl = spec.hl || [], dim = spec.dim || [], gaps = spec.gapAfter || [];
+  const els = keys.map((k, i) => {
+    const box = document.createElement("div");
+    box.className = "cn-coin"
+      + (hl.includes(i) ? " hl" : "")
+      + (dim.includes(i) ? " dim" : "")
+      + (gaps.includes(i) ? " gap" : "");
+    box.appendChild(coinEl(k));
+    if (spec.labels) {
+      const v = document.createElement("div");
+      v.className = "cn-val";
+      v.textContent = money(MONEY[k].cents);
+      box.appendChild(v);
+    }
+    row.appendChild(box);
+    return box;
+  });
+
+  /* Coins are as big as the stage can afford. --cn-max is the size we would
+     like; a long row (ten dimes) shrinks to whatever keeps it on ONE line,
+     because a count that wraps to a second row stops reading left to right. */
+  if (!spec.big) {
+    const wide = keys.reduce((t, k) => t + (MONEY[k].bill ? 62 : MONEY[k].mm) + 7, 0);
+    row.parentNode.style.setProperty("--cn-u",
+      `min(var(--cn-max), ${(66 / Math.max(wide, 1)).toFixed(3)}vw)`);
+  }
+
+  const start = spec.start || 0;
+  const runTo = i => start + keys.slice(0, i + 1).reduce((s, k) => s + MONEY[k].cents, 0);
+
+  let tally = null;
+  if (spec.tally) {
+    tally = document.createElement("div");
+    tally.className = "cn-tally";
+    wrap.appendChild(tally);
+  }
+  let chip = null;
+  if (spec.goal != null) {
+    chip = document.createElement("div");
+    chip.className = "cn-goal";
+    chip.textContent = (spec.goalLabel || "We need") + "  " + money(spec.goal);
+    wrap.appendChild(chip);
+  }
+
+  const setTotal = n => {
+    if (tally) {
+      tally.textContent = money(n);
+      tally.classList.toggle("landed", spec.goal != null && n === spec.goal);
+    }
+    if (chip) chip.classList.toggle("hit", n >= spec.goal);
+  };
+  /* A beat only COUNTS if it has something to count into: a running total or a
+     goal to climb to. Without one this is an identification beat (here is a
+     dime, name these four) and the coins must stay their own colour instead of
+     all turning counted-gold. */
+  const counting = !!(spec.tally || spec.goal != null);
+  /* upto freezes a count partway: the whole row stays on the stage, but only
+     the first N coins are counted. That is how the worked example walks one
+     coin at a time without coins vanishing between beats. */
+  const upto = spec.upto == null ? keys.length : spec.upto;
+  const reset = () => { els.forEach(e => e.classList.remove("on")); setTotal(start); };
+  const tap = i => { els[i].classList.add("on"); setTotal(runTo(i)); };
+  const still = () => { reset(); if (counting) for (let i = 0; i < upto; i++) tap(i); };
+
+  if (spec.result) {
+    const res = document.createElement("div");
+    res.className = "cn-result";
+    res.textContent = spec.result;
+    wrap.appendChild(res);
+  }
+
+  if (live && counting && upto && !spec.instant) {
+    clearHashTimers();
+    const play = () => {
+      reset();
+      for (let i = 0; i < upto; i++)
+        hashTimers.push(setTimeout(() => tap(i), CN_TAP_MS * (i + 1)));
+    };
+    play();
+    const again = document.createElement("button");
+    again.className = "count-again";
+    again.textContent = "↺  Count again";
+    again.addEventListener("click", e => {
+      e.currentTarget.blur();
+      clearHashTimers();
+      play();
+    });
+    wrap.appendChild(again);
+  } else {
+    still();
+  }
+  return wrap;
+}
+
 /* column-math renderer: right-aligned strings -> grid of big cells */
 /* tally-mark skip counting. One mark per unit; tapping the whole row once
    lands on the next multiple, and each pass fills the next box of the chart.
@@ -1003,6 +1210,7 @@ function buildMChart(factor, filled, holdLast, quiet) {
   return { el, pending };
 }
 
+const CN_TAP_MS = 360;        // pause between coins as a row is counted
 const HASH_TAP_MS = 420;
 const SENTENCE_MS = 550;      // pause between sentences on a story/answer card
 const PLACE_MS = 650;         // pause between place names as the chart fills in

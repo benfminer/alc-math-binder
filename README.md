@@ -136,6 +136,7 @@ presenter window just shows less.
 | `grid` | Multiplication fact grid. |
 | `charts` | Skip-counting charts for one or more factors. |
 | `rect` | Rectangle with labeled sides, for area and perimeter. |
+| `coins` | A row of coins and bills, counted left to right with a running total. Counts a handful, and counts *up* to make change. |
 | `recap` | Final screen: the full Steps recipe at full size. |
 
 The per-kind spec fields (`rows`, `carry`, `borrow`, `carryStrike`, `strike`, `context`,

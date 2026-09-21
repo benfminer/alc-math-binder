@@ -334,6 +334,73 @@ button{font:inherit; cursor:pointer}
 .rc-result.walk{background:#f0dcc4; box-shadow:inset 0 0 0 3px #a9713a}
 .rc-formula{font-size:clamp(1rem, 2.4vh, 1.6rem); font-weight:800; color:var(--soft); letter-spacing:.03em}
 
+/* ---------- stage content: money ---------- */
+/* --cn-u is one millimetre of coin, shared by every coin on the stage, so a
+   dime really is smaller than a penny. Do not size coins individually. */
+.cn-wrap{
+  --cn-max:clamp(.20rem, .80vh, .44rem); --cn-u:var(--cn-max);
+  display:flex; flex-direction:column; align-items:center;
+  gap:clamp(.5rem, 1.4vh, 1rem);
+}
+.cn-wrap.big{--cn-u:clamp(.30rem, 1.5vh, .80rem)}
+.cn-row{display:flex; align-items:flex-end; justify-content:center; flex-wrap:wrap;
+        gap:clamp(.4rem, 1.4vh, 1rem) clamp(.3rem, 1vh, .7rem)}
+.cn-coin{display:flex; flex-direction:column; align-items:center; gap:.25rem}
+.cn-coin.gap{margin-right:clamp(1rem, 3.5vh, 2.6rem)}
+.cn-coin.dim{opacity:.32}
+.cn-svg{width:auto; display:block; overflow:visible;
+        transform-box:fill-box; transform-origin:center}
+.cn-val{
+  font-size:clamp(.8rem, 1.9vh, 1.25rem); font-weight:800; color:var(--soft);
+  letter-spacing:.01em;
+}
+/* one coin held up on its own gets its value read from the back row too */
+.cn-wrap.big .cn-val{font-size:clamp(1.3rem, 3.4vh, 2.3rem); color:var(--ink)}
+
+/* the coin itself: a rim, a face, and the coin's own name written on it */
+.cn-rim{fill:#b9c0c8; stroke:#8d959e; stroke-width:.7}
+.cn-face-c{fill:#dfe4e9; stroke:none}
+.cn-svg.copper .cn-rim{fill:#c98b4e; stroke:#96622f; stroke-width:.7}
+.cn-svg.copper .cn-face-c{fill:#e0a76d}
+.cn-face{font-family:inherit; font-weight:800; fill:#46505c; letter-spacing:.02em}
+.cn-svg.copper .cn-face{fill:#5e3a18}
+
+/* a coin we have already counted: gold ring, same gold as a landed count
+   everywhere else in the binder */
+.cn-coin.on .cn-svg{animation:pop .22s ease}
+.cn-coin.on .cn-rim{fill:var(--gold); stroke:#b4801c}
+.cn-coin.on .cn-face-c{fill:#ffe6ac}
+.cn-coin.on .cn-face{fill:#6b4a08}
+.cn-coin.on .cn-val{color:var(--ink)}
+.cn-coin.hl .cn-rim{stroke:var(--accent); stroke-width:1.6}
+.cn-coin.hl .cn-val{color:var(--accent-dark)}
+
+/* bills, all one size, drawn flat so they read from the back of the room */
+.cn-bill{fill:#d8e8d2; stroke:#3f6b39; stroke-width:1.4}
+.cn-bill-in{fill:none; stroke:#7aa270; stroke-width:.8}
+.cn-face.bill{font-size:11px; fill:#26492a}
+.cn-corner{font-family:inherit; font-size:5px; font-weight:800; fill:#3f6b39}
+.cn-coin.on .cn-bill{fill:#fff1cc; stroke:#b4801c}
+.cn-coin.on .cn-bill-in{stroke:var(--gold)}
+.cn-coin.on .cn-face.bill,.cn-coin.on .cn-corner{fill:#6b4a08}
+
+/* the running total, and the amount we are climbing towards */
+.cn-tally{
+  font-size:clamp(1.4rem, 3.4vh, 2.4rem); font-weight:800; color:var(--ink);
+  background:#e7eef6; border-radius:12px; padding:.1rem 1.1rem; min-height:1.3em;
+}
+.cn-tally.landed{background:#fff1cc; box-shadow:inset 0 0 0 3px var(--gold)}
+.cn-goal{
+  font-size:clamp(.95rem, 2.2vh, 1.45rem); font-weight:800; color:var(--soft);
+  border:3px dashed #cfc5b4; border-radius:12px; padding:.1rem .9rem;
+}
+.cn-goal.hit{border-color:var(--gold); border-style:solid; color:var(--ink); background:#fff1cc}
+.cn-result{
+  font-size:clamp(1.3rem, 3.2vh, 2.2rem); font-weight:800; color:var(--ink);
+  background:#dcecd0; box-shadow:inset 0 0 0 3px #5e8f44; border-radius:12px;
+  padding:.25rem 1.2rem; animation:pop .25s ease;
+}
+
 /* ---------- stage content: tally-mark skip counting ---------- */
 .hash-wrap{display:flex; flex-direction:column; align-items:center; gap:clamp(.8rem, 2vh, 1.5rem)}
 .hash-row{display:flex; gap:clamp(.45rem, 1.2vh, 1rem); align-items:flex-start}
