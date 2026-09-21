@@ -4,7 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ALC Math Binder</title>
-<script src="styles.js"></script>
+<!-- ?v= is a cache buster. The browser treats a new value as a new file, so a
+     plain reload after a deploy always gets the latest. BUMP ALL THREE to the
+     deploy date whenever styles.js, lessons.js or app.js changes, or the
+     classroom machine will keep showing yesterday's binder. -->
+<script src="styles.js?v=2026-09-21"></script>
 <script>document.head.appendChild(Object.assign(document.createElement("style"), { textContent: APP_CSS }));</script>
 </head>
 <body>
@@ -44,7 +48,7 @@
   </nav>
 </main>
 
-<script src="lessons.js"></script>
-<script src="app.js"></script>
+<script src="lessons.js?v=2026-09-21"></script>
+<script src="app.js?v=2026-09-21"></script>
 </body>
 </html>
