@@ -16,8 +16,8 @@ nothing that ever advances on its own.
 ## Using it in class
 
 1. Open the site. The **Binder** home screen lists every topic, grouped into units
-   (Number Sense, Operations, Factors & Multiples, Fractions & Decimals, Geometry,
-   Coordinates). Topics marked "soon" aren't written yet and don't open.
+   (Math Words, Number Sense, Operations, Money, Factors & Multiples, Fractions &
+   Decimals, Geometry, Coordinates). Topics marked "soon" aren't written yet and don't open.
 2. Press a card to start that lesson.
 3. Click **Next** to advance one beat. Each click does exactly one small thing on the
    stage and adds one numbered card to the Steps list.
@@ -137,6 +137,7 @@ presenter window just shows less.
 | `charts` | Skip-counting charts for one or more factors. |
 | `rect` | Rectangle with labeled sides, for area and perimeter. |
 | `coins` | A row of coins and bills, counted left to right with a running total. Counts a handful, and counts *up* to make change. |
+| `words` | Math-word bins (put together, take away or compare, equal groups, share or split). Words drop into their bin one per click, building an anchor chart; a word problem can light up the right bin, or the wrong one in red for a trap. |
 | `recap` | Final screen: the full Steps recipe at full size. |
 
 The per-kind spec fields (`rows`, `carry`, `borrow`, `carryStrike`, `strike`, `context`,

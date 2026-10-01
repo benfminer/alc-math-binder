@@ -213,6 +213,15 @@ function stageDOM(b, prevForPop, live) {
       out.appendChild(note);
     }
   }
+  else if (s.kind === "words") {
+    out.appendChild(buildWordSort(s, live));
+    if (s.note) {
+      const note = document.createElement("div");
+      note.className = "note-card";
+      note.innerHTML = `<span class="note-title">${s.note.title}</span>${s.note.text}`;
+      out.appendChild(note);
+    }
+  }
   else if (s.kind === "grid") {
     out.appendChild(buildFactGrid(s));
   }
@@ -928,6 +937,96 @@ function buildCoins(spec, live) {
     wrap.appendChild(again);
   } else {
     still();
+  }
+  return wrap;
+}
+
+/* ---------- stage content: math words ----------
+   Bins across the stage, one per thing that can be HAPPENING in a problem.
+   Words collect in their bin over the lesson, so by the end the stage is the
+   class anchor chart. The bins are named for the action, not the symbol: the
+   word is only a clue, and the lesson's whole argument is "picture what is
+   happening", so the action is the big text and the symbol rides along.
+     bins     : which bins are on stage, e.g. ["add", "sub"]
+     words    : { add: [...], sub: [...] } words already sorted (before this beat)
+     drop     : { bin, word, example } the one new word this beat. It pops into
+                its bin and its example sentence sits under the chart.
+     sentence : a word problem. Wrap the clue in [[...]] to highlight it.
+     point    : the bin the clue points to. That bin lights up gold.
+     wrong    : with point, the bin lights up red and is struck out instead.
+                Used for the trap beat, before the right bin is shown.
+     result   : answer line under the chart */
+const WORD_BINS = {
+  add: { sym: "+", name: "Put together" },
+  sub: { sym: "−", name: "Take away or compare" },
+  mul: { sym: "×", name: "Equal groups" },
+  div: { sym: "÷", name: "Share or split" },
+};
+
+function buildWordSort(spec, live) {
+  const wrap = document.createElement("div");
+  wrap.className = "ws-wrap";
+
+  if (spec.sentence) {
+    const sen = document.createElement("div");
+    sen.className = "ws-sentence";
+    sen.innerHTML = spec.sentence.replace(/\[\[(.+?)\]\]/g,
+      `<span class="ws-clue${spec.point && spec.wrong ? " wrong" : ""}">$1</span>`);
+    wrap.appendChild(sen);
+  }
+
+  const row = document.createElement("div");
+  row.className = "ws-bins";
+  wrap.appendChild(row);
+
+  const words = spec.words || {};
+  (spec.bins || []).forEach(key => {
+    const def = WORD_BINS[key];
+    const bin = document.createElement("div");
+    const pointed = spec.point === key;
+    bin.className = "ws-bin " + key
+      + (pointed ? (spec.wrong ? " wrong" : " point") : "");
+
+    const head = document.createElement("div");
+    head.className = "ws-head";
+    head.innerHTML = `<span class="ws-sym">${def.sym}</span><span class="ws-name">${def.name}</span>`;
+    bin.appendChild(head);
+
+    const list = document.createElement("div");
+    list.className = "ws-list";
+    const all = (words[key] || []).slice();
+    const isDrop = spec.drop && spec.drop.bin === key;
+    if (isDrop) all.push(spec.drop.word);
+    all.forEach((w, i) => {
+      const chip = document.createElement("span");
+      chip.className = "ws-word";
+      if (isDrop && i === all.length - 1) chip.classList.add("new", live ? "pop" : "still");
+      chip.textContent = w;
+      list.appendChild(chip);
+    });
+    bin.appendChild(list);
+
+    if (pointed) {
+      const tag = document.createElement("div");
+      tag.className = "ws-tag";
+      tag.textContent = spec.wrong ? "✗  Not this one" : "✓  This one";
+      bin.appendChild(tag);
+    }
+    row.appendChild(bin);
+  });
+
+  if (spec.drop && spec.drop.example) {
+    const ex = document.createElement("div");
+    ex.className = "ws-example";
+    ex.innerHTML = spec.drop.example.replace(/\[\[(.+?)\]\]/g, `<span class="ws-clue">$1</span>`);
+    wrap.appendChild(ex);
+  }
+
+  if (spec.result) {
+    const res = document.createElement("div");
+    res.className = "cn-result";
+    res.textContent = spec.result;
+    wrap.appendChild(res);
   }
   return wrap;
 }

@@ -401,6 +401,54 @@ button{font:inherit; cursor:pointer}
   padding:.25rem 1.2rem; animation:pop .25s ease;
 }
 
+/* ---------- stage content: math words ---------- */
+/* Gold means "this is the bin", red means "not this one" — the same gold and
+   red as a landed count and a borrow everywhere else in the binder. */
+.ws-wrap{display:flex; flex-direction:column; align-items:center; gap:clamp(.7rem, 2vh, 1.4rem); width:100%}
+.ws-sentence{
+  font-size:clamp(1.3rem, 3.2vh, 2.2rem); font-weight:700; color:var(--ink); line-height:1.35;
+  background:#fff4dd; border:3px solid var(--gold); border-radius:var(--radius);
+  padding:.6rem 1.3rem; max-width:52rem; text-align:center;
+}
+.ws-clue{background:#fff1cc; box-shadow:inset 0 -.28em 0 var(--gold); font-weight:800; padding:0 .15em; border-radius:4px}
+.ws-clue.wrong{background:#ffe2de; box-shadow:inset 0 -.28em 0 var(--carry)}
+.ws-bins{display:flex; gap:clamp(.8rem, 2.4vh, 1.8rem); justify-content:center; width:100%; align-items:stretch}
+.ws-bin{
+  flex:1 1 0; max-width:30rem; background:var(--panel); border:4px solid var(--ink);
+  border-radius:var(--radius); padding:clamp(.5rem, 1.4vh, 1rem); display:flex; flex-direction:column;
+  gap:clamp(.4rem, 1.2vh, .9rem); min-height:clamp(9rem, 24vh, 17rem); position:relative;
+}
+.ws-head{display:flex; align-items:center; gap:.7rem; border-bottom:3px solid var(--line); padding-bottom:.4rem}
+.ws-sym{
+  flex:none; width:clamp(2.4rem, 5.6vh, 3.8rem); height:clamp(2.4rem, 5.6vh, 3.8rem); border-radius:50%;
+  display:grid; place-items:center; color:#fff; font-weight:800; font-size:clamp(1.6rem, 4vh, 2.7rem); line-height:1;
+}
+.ws-bin.add .ws-sym{background:#2c8a52}
+.ws-bin.sub .ws-sym{background:#3a4aa5}
+.ws-bin.mul .ws-sym{background:#7a4fbf}
+.ws-bin.div .ws-sym{background:#d97b29}
+.ws-name{font-size:clamp(1.2rem, 3vh, 2rem); font-weight:800; color:var(--ink); line-height:1.15}
+.ws-list{display:flex; flex-wrap:wrap; gap:clamp(.35rem, 1vh, .7rem); align-content:flex-start}
+.ws-word{
+  font-size:clamp(1.1rem, 2.7vh, 1.85rem); font-weight:800; color:var(--ink);
+  background:#f3ecdf; border:2px solid #cfc5b4; border-radius:10px; padding:.1rem .7rem; white-space:nowrap;
+}
+.ws-word.new{background:#fff1cc; border-color:var(--gold); box-shadow:0 0 0 3px var(--gold)}
+.ws-word.pop{animation:pop .3s ease}
+.ws-bin.point{border-color:var(--gold); box-shadow:0 0 0 5px var(--gold); background:#fffaf0}
+.ws-bin.wrong{border-color:var(--carry); box-shadow:0 0 0 5px #f2b1aa; opacity:.85}
+.ws-bin.wrong .ws-name{text-decoration:line-through; text-decoration-color:var(--carry); text-decoration-thickness:4px}
+.ws-tag{
+  align-self:center; margin-top:auto; font-weight:800; font-size:clamp(1rem, 2.4vh, 1.6rem);
+  padding:.1rem .9rem; border-radius:999px; animation:pop .25s ease;
+}
+.ws-bin.point .ws-tag{background:var(--gold); color:#4a3305}
+.ws-bin.wrong .ws-tag{background:var(--carry); color:#fff}
+.ws-example{
+  font-size:clamp(1.15rem, 2.8vh, 1.9rem); font-weight:600; color:var(--ink); line-height:1.35;
+  max-width:52rem; text-align:center;
+}
+
 /* ---------- stage content: tally-mark skip counting ---------- */
 .hash-wrap{display:flex; flex-direction:column; align-items:center; gap:clamp(.8rem, 2vh, 1.5rem)}
 .hash-row{display:flex; gap:clamp(.45rem, 1.2vh, 1rem); align-items:flex-start}

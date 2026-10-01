@@ -16,6 +16,13 @@
      rows[].strike  : crossed-out digits in a row (subtraction regrouping)
 
      cue  : teacher-only note (presenter window only)
+
+   "words" show spec (the Math Words unit), full notes above buildWordSort in app.js:
+     bins     : which action bins are on stage ("add" "sub" "mul" "div")
+     words    : words already sorted, by bin. Build it with wordsSoFar() below.
+     drop     : { bin, word, example } the one word this beat adds
+     sentence : word problem, clue word in [[...]]
+     point / wrong : light up the bin the clue points to (red + struck out if wrong)
 */
 
 /* Units and topics are ordered by what builds on what, not alphabetically or by
@@ -23,6 +30,10 @@
    Place Value leads because every column algorithm depends on it; times tables
    land right before 2-digit multiplication because that lesson assumes them. */
 const BINDER = [
+  { unit: "Math Words", topics: [
+    { id: "vocab-addsub", title: "Words for Adding and Subtracting" },
+    { id: "vocab-muldiv", title: "Words for Multiplying and Dividing" },
+  ]},
   { unit: "Number Sense", topics: [
     { id: "place-value", title: "Place Value" },
     { title: "Compare Decimals", soon: true },
@@ -2754,6 +2765,368 @@ LESSONS["money-bills"] = {
       show: { kind: "recap" },
       say: "That is the money unit. Know your coins, sort them biggest first, count on without going back to zero, and to make change you climb instead of subtracting. Coins to the next whole dollar, then bills the rest of the way. You can do this at a real register now.",
       cue: "Good place to bring out real coins and bills and run a pretend register for ten minutes.",
+    },
+
+  ],
+};
+
+/* ============================================================
+   MATH WORDS UNIT
+   The caseload review found a lot of wrong answers were never arithmetic
+   mistakes: the student did not know which operation the words asked for.
+   These two lessons are deliberately NOT a keyword table ("more means add").
+   Keywords lie: "more than" is adding in "$3 more than Jordan" and subtracting
+   in "how much more is the shirt". So every word goes into a bin named for what
+   is HAPPENING, and each lesson walks the class into a trap on purpose, then
+   out of it by picturing the story. The word is a clue, not an instruction.
+
+   "Count up / count down" is left out on purpose. In this binder count up is
+   how we SUBTRACT (fingers, making change), so teaching "count up means add"
+   here would contradict three lessons. It belongs with counting patterns.
+   ============================================================ */
+
+/* The chart so far: the first n words of a lesson's list, sorted into bins. */
+function wordsSoFar(list, n) {
+  const out = {};
+  list.slice(0, n).forEach(w => { (out[w.bin] = out[w.bin] || []).push(w.word); });
+  return out;
+}
+
+const VOCAB_AS = [
+  { bin: "add", word: "total",      example: "A shirt is $12. A hat is $8. What is the [[total]]?" },
+  { bin: "add", word: "sum",        example: "What is the [[sum]] of 12 and 8?" },
+  { bin: "add", word: "in all",     example: "You work 4 hours Monday and 5 hours Tuesday. How many hours [[in all]]?" },
+  { bin: "add", word: "more than",  example: "Jordan earns $12 an hour. Sam earns $3 [[more than]] Jordan. What does Sam earn?" },
+  { bin: "sub", word: "left",       example: "Your paycheck is $50. You spend $20 on groceries. How much is [[left]]?" },
+  { bin: "sub", word: "less than",  example: "The sale price is $4 [[less than]] the regular price of $15. What is the sale price?" },
+  { bin: "sub", word: "difference", example: "A day pass is $7. A one-ride ticket is $3. What is the [[difference]]?" },
+  { bin: "sub", word: "change",     example: "Lunch is $6. You pay with a $10 bill. How much [[change]] do you get back?" },
+  // added by the trap, not by a drop beat of its own
+  { bin: "sub", word: "how much more" },
+  // added during practice
+  { bin: "add", word: "altogether" },
+];
+const AS_BINS = ["add", "sub"];
+const asShow = (n, extra) => Object.assign(
+  { kind: "words", bins: AS_BINS, words: wordsSoFar(VOCAB_AS, n) }, extra || {});
+const asDrop = n => asShow(n, { drop: VOCAB_AS[n] });
+
+LESSONS["vocab-addsub"] = {
+  id: "vocab-addsub",
+  title: "Words for Adding and Subtracting",
+  beats: [
+
+    {
+      show: { kind: "title", kicker: "Math Words", title: "Words for Adding and Subtracting",
+              goal: "We will read a problem and figure out what is happening." },
+      say: "A lot of math mistakes are not math mistakes. You can add fine. You can subtract fine. The problem is the words. The question says difference, or total, or how much more, and you have to know what it is asking you to do. That is today.",
+    },
+
+    {
+      show: { kind: "note", title: "The big question", text: "Before you do any math, ask: <b>what is happening?</b><br>Are things being <b>put together</b>?<br>Or is something being <b>taken away</b>, or are two things being <b>compared</b>?" },
+      say: "Here is the one question we ask every single time. What is happening in this story? Are things being put together, like adding up a bill? Or is something being taken away, like spending money out of your pay? Or are we comparing two things, like two prices? Figure that out first. The math comes second.",
+      cue: "This is the whole lesson in one card. Come back to it whenever someone is stuck.",
+    },
+
+    {
+      step: "Read the whole problem. Ask: what is happening?",
+      show: asShow(0),
+      say: "So we get two bins. Put together is adding, that is the plus. Take away or compare is subtracting, that is the minus. We are going to fill these bins up with words you will see on worksheets, on job applications, at the store. By the end this is our cheat sheet.",
+      cue: "Point out that the bins are named for the action. The symbol is small on purpose.",
+    },
+
+    {
+      show: asDrop(0),
+      say: "First word. Total. A shirt is twelve dollars, a hat is eight dollars, what is the total? You are putting the two prices together. Twelve and eight is twenty. Total goes in put together.",
+      cue: "A receipt says TOTAL at the bottom. If you have one handy, hold it up.",
+    },
+
+    {
+      show: asDrop(1),
+      say: "Sum. Sum is a math word for the answer when you add. The sum of twelve and eight is twenty. Same thing as total, just a fancier word. Put together.",
+    },
+
+    {
+      show: asDrop(2),
+      say: "In all. Four hours Monday, five hours Tuesday, how many hours in all? Put the hours together. Nine hours. In all goes in put together.",
+    },
+
+    {
+      show: asDrop(3),
+      ask: "Sam earns $3 more than Jordan. Does Sam earn more money or less money than Jordan?",
+      say: "More than. Jordan makes twelve dollars an hour. Sam makes three dollars more than Jordan. So Sam has Jordan's twelve, and three more on top. Twelve and three is fifteen. That is putting together. Remember this word, more. We are going to see it again, and it is going to try to trick us.",
+      cue: "Plant the seed: 'more' shows up again later in the other bin.",
+    },
+
+    {
+      show: asDrop(4),
+      say: "Now the other bin. Left. Your paycheck is fifty dollars. You spend twenty on groceries. How much is left? Money is leaving. Something is being taken away. Fifty take away twenty is thirty. Left goes in take away.",
+    },
+
+    {
+      show: asDrop(5),
+      say: "Less than. The sale price is four dollars less than the regular price of fifteen. Less means smaller, so we take four away from fifteen. Eleven dollars. Take away.",
+    },
+
+    {
+      show: asDrop(6),
+      say: "Difference. This is the one that trips everybody up. Difference means how far apart two numbers are. A day pass is seven dollars, one ride is three dollars. The difference is how much more the day pass costs. Count up from three to seven. Four dollars. Difference is a compare word, so it goes in this bin.",
+      cue: "Difference is never adding. If anyone adds 7 + 3 here, ask: is the gap between the prices really $10?",
+    },
+
+    {
+      show: asDrop(7),
+      say: "And change. You know this one already from the money lessons. Lunch is six dollars, you pay with a ten. You climb from six up to ten, that is four dollars back. Change goes in take away or compare.",
+      cue: "Callback to Making Change from $1.00: we counted up from the price.",
+    },
+
+    {
+      step: "Find the clue word.",
+      show: asShow(8, { sentence: "The shirt is $18. The hat is $11. [[How much more]] is the shirt?" }),
+      ask: "The clue word is more. Which bin?",
+      say: "Now here is the trick I promised. The shirt is eighteen dollars, the hat is eleven. How much more is the shirt? Find the clue word. More. Where did we put more last time?",
+      cue: "Let them say 'put together'. Do not correct yet. The next click does it.",
+    },
+
+    {
+      show: asShow(8, { sentence: "The shirt is $18. The hat is $11. [[How much more]] is the shirt?",
+                        point: "add", wrong: true,
+                        note: { title: "Try it", text: "$18 + $11 = $29.<br>The shirt costs $29 more than the hat? The shirt only costs $18!" } }),
+      say: "Let's try adding and see what happens. Eighteen plus eleven is twenty nine. So the shirt costs twenty nine dollars more than the hat? The shirt only costs eighteen dollars. That answer makes no sense. The word said more, and the word fooled us.",
+      cue: "This is the moment of the lesson. Let the wrong answer sit for a second.",
+    },
+
+    {
+      step: "Picture it: putting together, or taking away and comparing?",
+      show: asShow(8, { sentence: "The shirt is $18. The hat is $11. [[How much more]] is the shirt?",
+                        point: "sub", drop: { bin: "sub", word: "how much more" } }),
+      say: "So stop and picture it. Are we putting the shirt and the hat together in a bag? No. We are holding them side by side and asking how far apart the prices are. That is comparing. How much more goes in the compare bin. The word more lives in both bins. That is why we picture the story, and not just grab the word.",
+      cue: "Point at both bins: 'more than' on the left, 'how much more' on the right. Same word, different job.",
+    },
+
+    {
+      show: { kind: "fingers", label: "Start at 11. Count up to 18.", start: 11, up: 7,
+              emphasis: "fingers", answer: "$18 − $11 = $7" },
+      say: "Now the math is easy, and we already know how. Comparing is subtracting, and we subtract by counting up. Start at eleven. Count up to eighteen. Twelve, thirteen, fourteen, fifteen, sixteen, seventeen, eighteen. Seven fingers. The shirt is seven dollars more.",
+      cue: "Same move as Subtracting by Counting Up. Have them count on their own hands.",
+    },
+
+    {
+      step: "Check: does the answer make sense?",
+      show: { kind: "answer", text: "The shirt is $7 more than the hat. Check it: $11 + $7 = $18. The hat plus $7 is the price of the shirt. It makes sense." },
+      say: "Last step. Does it make sense? The hat is eleven. Add seven and you get eighteen, the shirt. Yes. Twenty nine did not make sense. Seven does. Always check.",
+    },
+
+    {
+      show: asShow(9, { sentence: "You have $20 for groceries. The cart comes to $13. How much do you have [[left]]?" }),
+      ref: 3,
+      ask: "What is happening? Put together, or take away?",
+      say: "Your turn. You have twenty dollars for groceries, the cart comes to thirteen. How much do you have left? What is happening?",
+    },
+
+    {
+      show: asShow(9, { sentence: "You have $20 for groceries. The cart comes to $13. How much do you have [[left]]?",
+                        point: "sub", result: "$20 − $13 = $7 left" }),
+      ref: 3,
+      say: "Money is leaving your hands. Taken away. Count up from thirteen to twenty. Seven dollars left.",
+    },
+
+    {
+      show: asShow(9, { sentence: "You worked 6 hours Saturday and 7 hours Sunday. How many hours did you work [[altogether]]?" }),
+      ref: 3,
+      ask: "This is a new word. What is happening?",
+      say: "Here is a word we have not seen yet. Altogether. You worked six hours Saturday and seven hours Sunday. How many hours altogether? You do not need to know the word. Picture it. What is happening to the hours?",
+      cue: "The point: a new word is fine if you picture the story. Let them reason it out.",
+    },
+
+    {
+      show: asShow(9, { sentence: "You worked 6 hours Saturday and 7 hours Sunday. How many hours did you work [[altogether]]?",
+                        point: "add", drop: { bin: "add", word: "altogether" }, result: "6 + 7 = 13 hours" }),
+      ref: 3,
+      say: "The hours are being put together into one week. Put together. Six and seven is thirteen hours. Altogether goes in our put together bin.",
+    },
+
+    {
+      show: asShow(10, { sentence: "Your bus ride is 9 minutes. Your friend's ride is 4 minutes. How many [[more]] minutes is your ride?" }),
+      ref: 3,
+      ask: "The word is more again. Careful. What is happening?",
+      say: "Last one, and it is a sneaky one. Your bus ride is nine minutes. Your friend's ride is four minutes. How many more minutes is your ride? The word is more. What is really happening?",
+    },
+
+    {
+      show: asShow(10, { sentence: "Your bus ride is 9 minutes. Your friend's ride is 4 minutes. How many [[more]] minutes is your ride?",
+                         point: "sub", result: "9 − 4 = 5 more minutes" }),
+      ref: 4,
+      say: "Two rides side by side. We are comparing. Count up from four to nine. Five more minutes. Check it. Four and five is nine. Makes sense.",
+    },
+
+    {
+      show: { kind: "recap" },
+      say: "Read the whole problem. Find the clue word. Then picture it: put together, or take away and compare. Check that the answer makes sense. Next time, the same idea for multiplying and dividing.",
+      cue: "Good time to copy the two bins onto a poster for the wall.",
+    },
+
+  ],
+};
+
+/* ------------------------------------------------------------
+   Words for Multiplying and Dividing. Every number stays inside the 9x9
+   times table, because these students look facts up rather than recall them.
+   The trap here is "each", which shows up on both sides: "6 in each box"
+   (we know one group, multiply) vs "how many does each person get" (we know
+   the total, divide). The deciding question is the recipe's step 3.
+   ------------------------------------------------------------ */
+const VOCAB_MD = [
+  { bin: "mul", word: "each",       example: "A pack has 6 drinks in [[each]]. You buy 3 packs. How many drinks?" },
+  { bin: "mul", word: "per",        example: "You earn $9 [[per]] hour. You work 4 hours. How much do you earn?" },
+  { bin: "mul", word: "times",      example: "What is 5 [[times]] 7?" },
+  { bin: "mul", word: "product",    example: "What is the [[product]] of 4 and 8?" },
+  { bin: "mul", word: "double",     example: "A recipe needs 3 cups of rice. You [[double]] the recipe. How many cups?" },
+  { bin: "div", word: "split",      example: "The bill is $24. 4 friends [[split]] it evenly. How much does each pay?" },
+  { bin: "div", word: "share",      example: "5 workers [[share]] 30 hours of work evenly. How many hours each?" },
+  { bin: "div", word: "per person", example: "A pizza is $35 for 5 people. How much is that [[per person]]?" },
+  { bin: "div", word: "how many groups", example: "There are 30 chairs. 6 go at each table. [[How many tables]]?" },
+  // added by the trap
+  { bin: "div", word: "each person gets" },
+];
+const MD_BINS = ["mul", "div"];
+const mdShow = (n, extra) => Object.assign(
+  { kind: "words", bins: MD_BINS, words: wordsSoFar(VOCAB_MD, n) }, extra || {});
+const mdDrop = n => mdShow(n, { drop: VOCAB_MD[n] });
+const MD_TRAP = "24 cups are shared by 4 people. How many cups does [[each]] person get?";
+
+LESSONS["vocab-muldiv"] = {
+  id: "vocab-muldiv",
+  title: "Words for Multiplying and Dividing",
+  beats: [
+
+    {
+      show: { kind: "title", kicker: "Math Words", title: "Words for Multiplying and Dividing",
+              goal: "We will spot equal groups and sharing in a problem." },
+      say: "Last time we sorted words into put together and take away. Today two more things can happen in a story. Things can come in equal groups. Or something can get shared out. Same big question as last time: what is happening?",
+    },
+
+    {
+      show: { kind: "note", title: "Two new things that can happen", text: "<b>Equal groups:</b> every group is the same size. Packs of drinks. Hours at the same pay.<br><b>Share or split:</b> one big amount gets cut into equal parts. Splitting a bill." },
+      say: "Equal groups means every group is the same size. Every pack has six drinks. Every hour pays nine dollars. Share or split means you start with one big amount and cut it up evenly. Four friends splitting one bill.",
+    },
+
+    {
+      step: "Read the whole problem. Ask: what is happening?",
+      show: mdShow(0),
+      say: "Two new bins. Equal groups is times. Share or split is divide. Let's fill them up.",
+    },
+
+    {
+      show: mdDrop(0),
+      say: "Each. A pack has six drinks in each. You buy three packs. Every pack is the same, six. Three groups of six. That is equal groups. Six, twelve, eighteen drinks.",
+      cue: "Skip count on the times table chart if they need it: 6, 12, 18.",
+    },
+
+    {
+      show: mdDrop(1),
+      say: "Per. Per means for every one. Nine dollars per hour means every hour gives you nine dollars. Four hours is four groups of nine. Thirty six dollars. You will see per hour on every job you apply for.",
+      cue: "Real-life hook: per hour, per week, per shift.",
+    },
+
+    {
+      show: mdDrop(2),
+      say: "Times. Five times seven means five groups of seven. Thirty five.",
+    },
+
+    {
+      show: mdDrop(3),
+      say: "Product. Product is the math word for the answer when you multiply. Like sum is the answer when you add. The product of four and eight is thirty two.",
+      cue: "Pair it with sum from last lesson: sum is the add answer, product is the times answer.",
+    },
+
+    {
+      show: mdDrop(4),
+      say: "Double. Double means two groups of the same thing. Three cups, doubled, is two groups of three. Six cups.",
+    },
+
+    {
+      show: mdDrop(5),
+      say: "Now the other bin. Split. The bill is twenty four dollars, four friends split it evenly. One big amount, cut into four equal parts. That is dividing. Each friend pays six dollars, because four sixes are twenty four.",
+      cue: "Divide by looking it up: find 24 in the 4s row of the times table.",
+    },
+
+    {
+      show: mdDrop(6),
+      say: "Share. Thirty hours of work, shared by five workers. Cut thirty into five equal parts. Six hours each.",
+    },
+
+    {
+      show: mdDrop(7),
+      say: "Per person. Thirty five dollars of pizza for five people. Per person means cut it up so every person has the same. Seven dollars each.",
+      cue: "Per shows up on both sides. Per hour was groups. Per person here is splitting. Same idea as 'more' last lesson.",
+    },
+
+    {
+      show: mdDrop(8),
+      say: "How many groups. Thirty chairs, six at each table. How many tables? We know the total, thirty, and we know the size of one group, six. We are cutting thirty into groups of six. Five tables.",
+    },
+
+    {
+      step: "Find the clue word.",
+      show: mdShow(9, { sentence: MD_TRAP }),
+      ask: "The clue word is each. Where did we put each?",
+      say: "Now here is today's trick. Twenty four cups are shared by four people. How many cups does each person get? Find the clue word. Each. Where did we put each before?",
+      cue: "Let them say 'equal groups'. The next click shows why that is wrong.",
+    },
+
+    {
+      show: mdShow(9, { sentence: MD_TRAP, point: "mul", wrong: true,
+                        note: { title: "Try it", text: "24 × 4 = 96.<br>Each person gets 96 cups? There were only 24 cups to start!" } }),
+      say: "Let's try equal groups and multiply. Twenty four times four is ninety six. Each person gets ninety six cups? There were only twenty four cups in the whole room. That makes no sense. The word each fooled us.",
+    },
+
+    {
+      step: "Know the size of ONE group? Multiply. Know the TOTAL? Divide.",
+      show: mdShow(9, { sentence: MD_TRAP, point: "div", drop: { bin: "div", word: "each person gets" } }),
+      say: "So picture it. Do we know how big one group is? No, that is what we are looking for. We know the total. Twenty four cups. And we are cutting it up between four people. Know the total, and cutting it up? Divide. That is the question to ask every time. Do I know one group, or do I know the total?",
+      cue: "This step is the whole lesson. Have the class say it back.",
+    },
+
+    {
+      step: "Check: does the answer make sense?",
+      show: { kind: "answer", text: "24 ÷ 4 = 6 cups each. Check it: 4 people × 6 cups = 24 cups. It makes sense." },
+      say: "Twenty four cut into four is six. Check it. Four people with six cups each, that is twenty four cups. That is what we started with. It makes sense.",
+      cue: "Look it up on the times table: find 24 in the 4s row. It is under 6.",
+    },
+
+    {
+      show: mdShow(10, { sentence: "You earn $8 [[each]] hour. You work 7 hours. How much do you earn?" }),
+      ref: 3,
+      ask: "Do we know one group, or the total?",
+      say: "Your turn. You earn eight dollars each hour. You work seven hours. How much do you earn? Do we know one group, or the total?",
+    },
+
+    {
+      show: mdShow(10, { sentence: "You earn $8 [[each]] hour. You work 7 hours. How much do you earn?",
+                         point: "mul", result: "7 × $8 = $56" }),
+      ref: 3,
+      say: "We know one group. One hour is eight dollars. Seven of those groups. Multiply. Fifty six dollars.",
+    },
+
+    {
+      show: mdShow(10, { sentence: "56 water bottles are packed 8 to a box. [[How many boxes]] do you need?" }),
+      ref: 3,
+      ask: "Do we know one group, or the total?",
+      say: "Last one. Fifty six water bottles, packed eight to a box. How many boxes? One group, or the total?",
+      cue: "Trick-ish: we know both the total AND the group size. The missing piece is the number of groups, so divide.",
+    },
+
+    {
+      show: mdShow(10, { sentence: "56 water bottles are packed 8 to a box. [[How many boxes]] do you need?",
+                         point: "div", result: "56 ÷ 8 = 7 boxes" }),
+      ref: 4,
+      say: "We know the total, fifty six, and we are cutting it into boxes of eight. Divide. Seven boxes. Check it. Seven boxes of eight is fifty six. Makes sense.",
+    },
+
+    {
+      show: { kind: "recap" },
+      say: "Read the whole problem. Find the clue word. Ask: do I know one group, or the total? Check that the answer makes sense. Soon we will build multiplication from equal groups, so this lesson is the first step.",
     },
 
   ],
