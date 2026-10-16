@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Makey Makey Practice</title>
+<!-- ?v= is a cache buster, same rule as index.html: bump on every deploy. -->
+<script src="styles.js?v=2026-10-16"></script>
+<script>document.head.appendChild(Object.assign(document.createElement("style"), { textContent: APP_CSS }));</script>
+</head>
+<body>
+
+<main class="pr-page">
+  <header class="pr-top">
+    <a class="btn ghost" href="index.html" title="Back to binder">&#8962; Binder</a>
+    <div id="prLevels" class="pr-levels"></div>
+    <button class="btn" id="prMode" title="Key M"></button>
+    <button class="btn" id="prPrompts" title="Key P"></button>
+    <button class="btn primary" id="prNew" title="Key N">New problem</button>
+    <div class="pr-solved" title="Problems solved this session">Solved <span id="prSolved">0</span></div>
+  </header>
+
+  <section id="prStage" class="pr-stage">
+    <div id="prProblem" class="pr-problem"></div>
+    <div class="pr-count">
+      <div id="prStart" class="pr-start"></div>
+      <div id="prNow" class="pr-now"></div>
+      <div id="prHands" class="hands"></div>
+      <div id="prTally" class="fing-tally"></div>
+    </div>
+  </section>
+
+  <div id="prBanner" class="pr-banner" aria-live="polite"></div>
+
+  <nav class="pr-pads">
+    <button class="pr-pad count" data-pad="count"><b>COUNT</b><span>Space</span></button>
+    <button class="pr-pad yes" data-pad="yes"><b>YES</b><span>&uarr;</span></button>
+    <button class="pr-pad no" data-pad="no"><b>NO</b><span>&darr;</span></button>
+    <button class="pr-pad done" data-pad="done"><b>DONE</b><span>&rarr;</span></button>
+  </nav>
+</main>
+
+<script src="app.js?v=2026-10-16"></script>
+<script src="practice.js?v=2026-10-16"></script>
+</body>
+</html>

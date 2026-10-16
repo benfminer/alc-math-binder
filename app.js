@@ -1782,26 +1782,31 @@ function updatePresenter() {
 
 /* ================= wiring ================= */
 
-$("#btnNext").addEventListener("click", next);
-$("#btnBack").addEventListener("click", prev);
-$("#btnHome").addEventListener("click", goHome);
-$("#btnPresenter").addEventListener("click", openPresenter);
+/* practice.html loads this file for its renderers (buildColumns, buildHand)
+   but has none of the binder's DOM, so the binder only wires itself up when
+   its own page is the one loaded. */
+if (document.getElementById("home")) {
+  $("#btnNext").addEventListener("click", next);
+  $("#btnBack").addEventListener("click", prev);
+  $("#btnHome").addEventListener("click", goHome);
+  $("#btnPresenter").addEventListener("click", openPresenter);
 
-document.addEventListener("keydown", e => {
-  if ($("#player").hidden) return;
-  if (["ArrowRight", "PageDown", " "].includes(e.key)) { e.preventDefault(); next(); }
-  else if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); prev(); }
-});
+  document.addEventListener("keydown", e => {
+    if ($("#player").hidden) return;
+    if (["ArrowRight", "PageDown", " "].includes(e.key)) { e.preventDefault(); next(); }
+    else if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); prev(); }
+  });
 
-renderHome();
+  renderHome();
 
-// deep link: index.html#lesson=add-large&beat=6  (beat is 1-based)
-(function () {
-  const h = new URLSearchParams(location.hash.slice(1));
-  const id = h.get("lesson");
-  if (id && LESSONS[id]) {
-    openLesson(id);
-    const b = parseInt(h.get("beat"), 10);
-    if (b > 1) jump(Math.min(b, beats().length) - 1);
-  }
-})();
+  // deep link: index.html#lesson=add-large&beat=6  (beat is 1-based)
+  (function () {
+    const h = new URLSearchParams(location.hash.slice(1));
+    const id = h.get("lesson");
+    if (id && LESSONS[id]) {
+      openLesson(id);
+      const b = parseInt(h.get("beat"), 10);
+      if (b > 1) jump(Math.min(b, beats().length) - 1);
+    }
+  })();
+}

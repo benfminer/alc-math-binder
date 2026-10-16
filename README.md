@@ -48,6 +48,39 @@ The presenter window has its own Next/Back and accepts the same keys, so you can
 the whole lesson from the laptop. Both windows stay in sync. Allow pop-ups for the site
 the first time.
 
+### Makey Makey practice
+
+`practice.html` (linked at the top of the binder home) is a separate page for practising
+adding and subtracting with a Makey Makey. You lead at the projector, one student works
+the pads, and the class calls out answers. Problems are random. Every column is counted
+out one tap at a time, the same way the lessons teach it: adding starts at the bigger
+digit and counts up, then asks "more than 9? carry?"; subtracting asks "top digit too
+small? borrow?" first, then counts UP from the bottom digit to the top. The taps are the
+answer. A wrong count or a wrong YES/NO is allowed and shown, so the class can fix it.
+
+Wire one pad per key, and the student holds the ground (EARTH) in the other hand:
+
+| Pad | Makey Makey key | Does |
+| --- | --- | --- |
+| COUNT (make it the biggest) | Space | one touch = one count |
+| YES | Up arrow | answers carry / borrow |
+| NO | Down arrow | answers carry / borrow |
+| DONE | Right arrow | "I landed", checks the count |
+| Hidden teacher pad | Left arrow | undo the last step |
+
+A pad only counts once the finger lifts off, so a hand resting on the foil does not
+count over and over. Teacher keys on the laptop (the pads never send these): **N** new
+problem, **1-5** level, **P** prompts on/off (on = the screen says what to do and lights
+the pads that make sense; off = students run it alone), **M** adding / subtracting /
+both. Everything can also be clicked, for a day without the board.
+
+Levels: 1 adding facts, 2 subtracting facts, 3 two-digit with no regrouping, 4 two-digit
+with regrouping, 5 three and four digits. Subtraction never borrows across a zero.
+`practice.html#level=4` opens straight on a level.
+
+The binder uses Space and the arrow keys to move through slides, which is why the
+practice lives on its own page: the pads would flip slides inside a lesson.
+
 ---
 
 ## Running it locally
@@ -71,6 +104,7 @@ real stylesheet — it would break offline double-click use.
 | `styles.js` | All CSS, as the `APP_CSS` string. See the quirk above. |
 | `lessons.js` | All content: the `BINDER` table of contents and the `LESSONS` beat data. |
 | `app.js` | The player: navigation, the Steps panel, presenter window, and every stage renderer. |
+| `practice.html`, `practice.js` | The Makey Makey practice page. Reuses `buildColumns` and `buildHand` from `app.js`, whose binder wiring only runs when the binder page is loaded. |
 | `PLAN.md` | Original design plan and phase roadmap. |
 | `web-pilot/` | Earlier style explorations, kept for reference. Not part of the app. |
 

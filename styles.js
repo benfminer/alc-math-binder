@@ -62,6 +62,7 @@ button{font:inherit; cursor:pointer}
 .card .soon{font-size:.85rem; font-weight:600; color:var(--soft)}
 .card.ready .go{font-size:.85rem; color:var(--accent); font-weight:800}
 .card.locked{opacity:.55; box-shadow:none; border-style:dashed; cursor:default}
+.practice-link{display:inline-block; text-decoration:none; margin-bottom:.5rem}
 .home-foot{margin-top:3rem; color:var(--soft); font-size:.95rem}
 
 /* ---------- player layout ---------- */
@@ -569,6 +570,83 @@ button{font:inherit; cursor:pointer}
 .recap h2{text-align:center; font-size:2.2rem; margin:0 0 1rem}
 .recap ol{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:.7rem}
 .recap .step-card{font-size:1.25rem}
+
+/* ---------- Makey Makey practice (practice.html) ----------
+   One screen for the projector: the problem on the left, the counting hands
+   on the right, one banner saying what happens now, and the four pads along
+   the bottom in the same order they sit on the table. */
+.pr-page{height:100vh; display:flex; flex-direction:column; gap:.7rem; padding:.8rem 1rem 1rem}
+.pr-top{display:flex; align-items:center; gap:.6rem; flex-wrap:wrap}
+.pr-top a.btn{text-decoration:none}
+.pr-levels{display:flex; gap:.4rem; flex-wrap:wrap; flex:1}
+.pr-level{font-size:.9rem; padding:.35rem .7rem; box-shadow:0 2px 0 var(--ink)}
+.pr-level .k{display:inline-block; min-width:1.3em; border-radius:6px; background:var(--line); text-align:center; margin-right:.2rem}
+.pr-level.on{background:var(--ink); color:#fff}
+.pr-level.on .k{background:var(--gold); color:var(--ink)}
+.pr-solved{font-weight:800; color:var(--soft); font-size:1.1rem; white-space:nowrap}
+.pr-solved span{color:var(--ink); font-size:1.5rem; margin-left:.2rem}
+
+.pr-stage{
+  flex:1; min-height:0; display:grid; grid-template-columns:1fr 1.25fr; gap:1rem; align-items:center;
+  background:var(--panel); border:3px solid var(--ink); border-radius:var(--radius); padding:1rem 1.5rem;
+}
+.pr-problem{display:flex; justify-content:center; align-items:center}
+.pr-problem .math-block{transform:scale(1.15); transform-origin:center}
+.pr-count{display:flex; flex-direction:column; align-items:center; gap:.3rem; min-width:0}
+.pr-start{font-size:clamp(1.1rem, 2.6vh, 1.8rem); font-weight:800; color:var(--soft); min-height:1.4em}
+.pr-now{
+  font-size:clamp(2.6rem, 8vh, 5.5rem); font-weight:900; line-height:1; min-height:1em;
+  font-variant-numeric:tabular-nums; color:var(--ink);
+}
+.pr-now.landed{color:var(--carry)}
+.pr-now.miss{color:#a9b2bd}
+.pr-count .fsvg{height:clamp(8rem, 30vh, 19rem)}
+.hands.pr-shake{animation:pr-shake .4s ease}
+@keyframes pr-shake{0%,100%{transform:none} 20%,60%{transform:translateX(-12px)} 40%,80%{transform:translateX(12px)}}
+
+/* a fact is written across, the way the finger lessons write it */
+.pr-fact{display:flex; gap:.4em; align-items:center; font-size:clamp(3rem, 11vh, 7rem); font-weight:800; font-variant-numeric:tabular-nums}
+.pr-fact .op{color:var(--soft)}
+.pr-fact-ans{min-width:1.3em; border-bottom:6px solid var(--ink); text-align:center; color:var(--carry)}
+.pr-fact-ans.pop{animation:pop .4s ease}
+/* the carried 1, on the tap that counts it */
+.mrow.carry .cell.pr-lit{background:#ffe2de; border-radius:10px; box-shadow:inset 0 0 0 3px var(--carry); animation:pop .3s ease}
+
+.pr-banner{
+  border-radius:var(--radius); padding:.7rem 1.4rem; text-align:center;
+  background:#f3ecdf; border:3px solid var(--line); min-height:5.2rem;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.pr-main{font-size:clamp(1.4rem, 3.6vh, 2.4rem); font-weight:800; line-height:1.2}
+.pr-sub{font-size:clamp(1rem, 2.2vh, 1.45rem); font-weight:700; color:var(--soft)}
+.pr-banner.ask{background:var(--ink); border-color:var(--ink); color:#fff}
+.pr-banner.ask .pr-sub{color:var(--gold)}
+.pr-banner.wrong{background:#fde4e1; border-color:var(--carry); color:var(--ink); animation:pr-shake .4s ease}
+.pr-banner.wrong .pr-sub{color:var(--carry)}
+.pr-banner.miss{background:#fde4e1; border-color:var(--carry)}
+.pr-banner.solved{background:#e7f6ec; border-color:#2c8a52}
+.pr-banner.solved .pr-sub{color:#2c8a52}
+
+.pr-pads{display:grid; grid-template-columns:2fr 1fr 1fr 1.4fr; gap:.8rem}
+.pr-pad{
+  border:3px solid var(--ink); border-radius:14px; background:var(--panel); color:var(--ink);
+  padding:.45rem .8rem; display:flex; flex-direction:column; align-items:center; line-height:1.1;
+  box-shadow:0 3px 0 var(--ink); opacity:.55; transition:opacity .15s, background .15s;
+}
+.pr-pad b{font-size:clamp(1.1rem, 2.6vh, 1.7rem); letter-spacing:.06em}
+.pr-pad span{font-size:.85rem; color:var(--soft); font-weight:700}
+.pr-pad.want{opacity:1}
+.pr-pad.count.want{background:#fff1cc; border-color:#9a7420; box-shadow:0 3px 0 #9a7420}
+.pr-pad.yes.want{background:#e7f6ec; border-color:#2c8a52; box-shadow:0 3px 0 #2c8a52}
+.pr-pad.no.want{background:#fde4e1; border-color:var(--carry); box-shadow:0 3px 0 var(--carry)}
+.pr-pad.done.want{background:#eef2ff; border-color:#6272c9; box-shadow:0 3px 0 #6272c9}
+.pr-pad.pr-hit{animation:pr-hit .25s ease}
+.pr-pad.pr-nope{animation:pr-shake .3s ease}
+@keyframes pr-hit{0%{transform:translateY(3px); box-shadow:none} 100%{transform:none}}
+
+@media (max-width:900px){
+  .pr-stage{grid-template-columns:1fr}
+}
 
 @media (max-width:900px){
   .player-grid{grid-template-columns:1fr; grid-template-rows:1fr auto}
