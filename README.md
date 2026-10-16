@@ -78,6 +78,10 @@ Levels: 1 adding facts, 2 subtracting facts, 3 two-digit with no regrouping, 4 t
 with regrouping, 5 three and four digits. Subtraction never borrows across a zero.
 `practice.html#level=4` opens straight on a level.
 
+`pad-labels.html` (linked from the practice page) prints the pads themselves: four
+letter sheets, one card per pad with a box to glue the foil into and the Makey Makey
+hole it clips to.
+
 The binder uses Space and the arrow keys to move through slides, which is why the
 practice lives on its own page: the pads would flip slides inside a lesson.
 

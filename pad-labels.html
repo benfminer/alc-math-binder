@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Makey Makey Pad Labels</title>
+<!-- A print sheet for the practice pads. Each card IS the pad: glue foil inside
+     the dashed box, clip the Makey Makey wire to the foil tab. The label never
+     covers the foil, so it never gets in the way of a touch. Colours match the
+     pads on practice.html so the screen and the table agree. -->
+<style>
+@page{size:letter portrait; margin:.4in}
+:root{
+  --ink:#1e2a3a; --soft:#5b6b7d; --bg:#faf6ef;
+  --count:#f2b544; --count-bg:#fff1cc;
+  --yes:#2c8a52; --yes-bg:#e7f6ec;
+  --no:#d33a2f; --no-bg:#fde4e1;
+  --done:#6272c9; --done-bg:#eef2ff;
+  --hold:#1e2a3a; --hold-bg:#f3ecdf;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system, "Segoe UI", system-ui, Roboto, sans-serif;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact;
+}
+.screen-note{max-width:7.7in; margin:1rem auto; font-size:1rem; line-height:1.45}
+.screen-note button{font:inherit; font-weight:700; padding:.4rem 1rem; border:3px solid var(--ink); border-radius:10px; background:#fff; cursor:pointer}
+
+/* one sheet of letter paper, minus the print margins */
+.page{
+  width:7.7in; height:10.2in; margin:0 auto 1rem; background:#fff;
+  display:flex; flex-direction:column; gap:.3in; padding:0;
+  page-break-after:always; break-after:page;
+}
+.page:last-child{page-break-after:auto; break-after:auto}
+@media screen{ .page{padding:.25in; height:auto; min-height:10.2in; box-shadow:0 2px 10px rgba(0,0,0,.12)} }
+
+.card{
+  flex:1; position:relative; border:5px solid var(--c); border-radius:.3in;
+  background:var(--cbg); display:flex; flex-direction:column; align-items:center;
+  padding:.25in .3in .3in;
+}
+.card.count{--c:var(--count); --cbg:var(--count-bg)}
+.card.yes{--c:var(--yes); --cbg:var(--yes-bg)}
+.card.no{--c:var(--no); --cbg:var(--no-bg)}
+.card.done{--c:var(--done); --cbg:var(--done-bg)}
+.card.hold{--c:var(--hold); --cbg:var(--hold-bg)}
+
+.name{font-weight:900; letter-spacing:.06em; line-height:1; text-align:center}
+.count .name{font-size:1.5in}
+.half .name{font-size:1.1in}
+.what{font-size:.24in; font-weight:700; color:var(--soft); margin-top:.06in; text-align:center}
+
+/* the foil goes here */
+.foil{
+  flex:1; width:100%; margin-top:.2in; border:4px dashed var(--c); border-radius:.2in;
+  background:#fff; display:flex; align-items:center; justify-content:center;
+  color:#a9b2bd; font-size:.22in; font-weight:700; text-align:center;
+}
+
+/* which Makey Makey hole the wire goes in, written for the adult wiring it */
+.clip{
+  align-self:flex-end; margin-top:.12in; font-size:.16in; font-weight:800;
+  background:#fff; border:3px solid var(--c); border-radius:.12in; padding:.03in .12in;
+}
+.clip b{font-size:.2in}
+
+/* the ground card: hold it, don't tap it */
+.hold .foil{border-style:solid; font-size:.3in; color:var(--ink)}
+.star{font-size:1.4in; line-height:1; color:var(--count)}
+
+/* last page: the teacher's pad and the wiring key */
+.teacher-row{display:flex; gap:.3in; height:3.2in}
+.tcard{
+  width:3.2in; border:3px dashed #a9b2bd; border-radius:.2in; position:relative;
+  display:flex; align-items:center; justify-content:center; background:#fff;
+}
+.tcard .dot{position:absolute; top:.12in; left:.14in; width:.12in; height:.12in; border-radius:50%; background:#c9d0d8}
+.tcard .tiny{position:absolute; bottom:.1in; right:.14in; font-size:.11in; color:#a9b2bd}
+.tnote{flex:1; font-size:.18in; line-height:1.4}
+.tnote h2{font-size:.28in; margin:0 0 .08in}
+table{width:100%; border-collapse:collapse; font-size:.2in}
+th,td{border:2px solid var(--ink); padding:.07in .12in; text-align:left}
+th{background:var(--hold-bg)}
+.sw{display:inline-block; width:.18in; height:.18in; border-radius:.04in; vertical-align:-.03in; margin-right:.08in; border:2px solid var(--ink)}
+.howto{font-size:.18in; line-height:1.45}
+.howto h2{font-size:.28in; margin:0 0 .08in}
+.howto ol{margin:0; padding-left:.3in}
+
+@media print{ .screen-note{display:none} body{background:#fff} }
+</style>
+</head>
+<body>
+
+<div class="screen-note">
+  <p><b>Makey Makey pad labels.</b> Four sheets of letter paper. Print in color on cardstock if you have it, at 100% scale (no "fit to page"). Glue foil inside each dashed box and clip the wire to the foil. The label never covers the foil.</p>
+  <button onclick="window.print()">Print</button> &nbsp; <a href="practice.html">Back to practice</a>
+</div>
+
+<!-- sheet 1: COUNT gets a whole page, it is the pad that gets hit the most -->
+<section class="page">
+  <div class="card count">
+    <div class="name">COUNT</div>
+    <div class="what">One touch, one count</div>
+    <div class="foil">Glue foil here</div>
+    <div class="clip">Clip to <b>SPACE</b></div>
+  </div>
+</section>
+
+<!-- sheet 2: the two answers, side by side on the table -->
+<section class="page">
+  <div class="card yes half">
+    <div class="name">YES</div>
+    <div class="foil">Glue foil here</div>
+    <div class="clip">Clip to <b>&uarr; UP</b></div>
+  </div>
+  <div class="card no half">
+    <div class="name">NO</div>
+    <div class="foil">Glue foil here</div>
+    <div class="clip">Clip to <b>&darr; DOWN</b></div>
+  </div>
+</section>
+
+<!-- sheet 3: DONE, and the ground the student holds the whole time -->
+<section class="page">
+  <div class="card done half">
+    <div class="name">DONE</div>
+    <div class="what">Touch when you land</div>
+    <div class="foil">Glue foil here</div>
+    <div class="clip">Clip to <b>&rarr; RIGHT</b></div>
+  </div>
+  <div class="card hold half">
+    <div class="name">HOLD</div>
+    <div class="what">Keep one hand here the whole time</div>
+    <div class="foil"><span class="star">&#9733;</span></div>
+    <div class="clip">Clip to <b>EARTH</b></div>
+  </div>
+</section>
+
+<!-- sheet 4: the teacher's hidden pad and the wiring key -->
+<section class="page">
+  <div class="teacher-row">
+    <div class="tcard"><span class="dot"></span><span class="tiny">foil here</span></div>
+    <div class="tnote">
+      <h2>Teacher pad (hidden)</h2>
+      Cut this square out and glue foil on it. Clip it to <b>&larr; LEFT</b>.
+      Keep it on your side of the table. Touching it takes back the last
+      step: a stray count, a wrong answer, anything.
+      <b>You have to be grounded too.</b> Run a second wire from another
+      EARTH hole to a strip of foil you can rest a hand on, same as the
+      Chocolate Touch hidden pad. The grey dot marks the corner the wire goes on.
+    </div>
+  </div>
+
+  <div class="howto">
+    <h2>Wiring key</h2>
+    <table>
+      <tr><th>Pad</th><th>Makey Makey</th><th>Does</th></tr>
+      <tr><td><span class="sw" style="background:var(--count-bg);border-color:var(--count)"></span>COUNT</td><td>SPACE</td><td>One touch = one count</td></tr>
+      <tr><td><span class="sw" style="background:var(--yes-bg);border-color:var(--yes)"></span>YES</td><td>&uarr; UP</td><td>Carry? Borrow? Yes.</td></tr>
+      <tr><td><span class="sw" style="background:var(--no-bg);border-color:var(--no)"></span>NO</td><td>&darr; DOWN</td><td>Carry? Borrow? No.</td></tr>
+      <tr><td><span class="sw" style="background:var(--done-bg);border-color:var(--done)"></span>DONE</td><td>&rarr; RIGHT</td><td>"I landed." Checks the count.</td></tr>
+      <tr><td><span class="sw" style="background:#fff;border-style:dashed"></span>Teacher pad</td><td>&larr; LEFT</td><td>Undo the last step</td></tr>
+      <tr><td><span class="sw" style="background:var(--hold-bg)"></span>HOLD</td><td>EARTH</td><td>Student holds it the whole time</td></tr>
+    </table>
+  </div>
+
+  <div class="howto">
+    <h2>Setting up</h2>
+    <ol>
+      <li>Glue a sheet of foil inside each dashed box. Leave a strip of foil sticking past the edge for the clip.</li>
+      <li>Clip each pad to its Makey Makey hole using the key above. Plug the Makey Makey into the laptop.</li>
+      <li>Open the binder and press <b>Makey Makey Practice</b>. Click once on the page so it is listening.</li>
+      <li>Student holds HOLD in one hand and touches pads with the other. Lift off between counts: a hand resting on COUNT counts once.</li>
+      <li>Laptop keys for you: <b>N</b> new problem, <b>1&ndash;5</b> level, <b>P</b> prompts on/off, <b>M</b> adding / subtracting / both.</li>
+    </ol>
+  </div>
+</section>
+
+</body>
+</html>
